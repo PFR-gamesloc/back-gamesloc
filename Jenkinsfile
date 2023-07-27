@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'maven:3.9.0-eclipse-temurin-20'
+            image 'maven:3.9.3-eclipse-temurin-20'
             args '-v /root/.m2:/root/.m2 --network jenkins_network'
         }
     }
