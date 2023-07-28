@@ -1,4 +1,4 @@
-package pfr.backgamesloc.editors.DAL.entities;
+package pfr.backgamesloc.tags.DAL.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,19 +7,18 @@ import pfr.backgamesloc.games.DAL.entities.Game;
 import java.util.List;
 
 @Entity
-@Table(name ="editor")
+@Table(name = "tag")
 @Data
-public class Editor {
+public class Tag {
 
     @Id
-    @Column(name = "editor_id")
+    @Column(name = "tag_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private short editorId;
+    private short tagId;
 
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "editor")
+    @ManyToMany(mappedBy = "tags")
     private List<Game> games;
-
 }

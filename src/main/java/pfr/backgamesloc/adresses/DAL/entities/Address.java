@@ -1,10 +1,17 @@
 package pfr.backgamesloc.adresses.DAL.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Data;
 import pfr.backgamesloc.cities.DAL.entities.City;
+import pfr.backgamesloc.customers.DAL.entities.Customer;
+
+import java.util.List;
 
 @Entity
 @Table(name="address")
+@Data
 public class Address {
 
     @Id
@@ -12,47 +19,26 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer addressId;
 
-    @Column(name = "street_address")
-    private String streetAddress;
+    @Column(name = "street_name")
+    private String streetName;
 
+    @Column(name = "number_address")
+    private Integer numberAddress;
+
+    @Column(name = "complementary_number")
+    private String complementaryNumber;
 
     @Column(name = "complementary_address")
     private String complementaryAddress;
 
-    @OneToOne
+    @JsonManagedReference
+    @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
 
-    public Integer getAddressId() {
-        return addressId;
-    }
+    @JsonBackReference
+    @OneToMany(mappedBy = "address")
+    private List<Customer> customers;
 
-    public void setAddressId(Integer addressId) {
-        this.addressId = addressId;
-    }
-
-    public String getStreetAddress() {
-        return streetAddress;
-    }
-
-    public void setStreetAddress(String streetAddress) {
-        this.streetAddress = streetAddress;
-    }
-
-    public String getComplementaryAddress() {
-        return complementaryAddress;
-    }
-
-    public void setComplementaryAddress(String complementaryAddress) {
-        this.complementaryAddress = complementaryAddress;
-    }
-
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
-    }
 }
 

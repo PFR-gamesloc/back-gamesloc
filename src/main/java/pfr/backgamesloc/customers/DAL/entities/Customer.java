@@ -1,14 +1,21 @@
 package pfr.backgamesloc.customers.DAL.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Data;
 import pfr.backgamesloc.adresses.DAL.entities.Address;
+import pfr.backgamesloc.games.DAL.entities.Game;
+import pfr.backgamesloc.opinions.DAL.entities.Opinion;
+import pfr.backgamesloc.orders.DAL.entities.Order;
 
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "customer")
+@Data
 public class Customer {
+
     @Id
     @Column(name = "customer_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +27,6 @@ public class Customer {
     @Column(name = "last_name")
     private String lastName;
 
-
     @Column(name = "password")
     private String password;
 
@@ -30,85 +36,18 @@ public class Customer {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToOne
+    @JsonManagedReference
+    @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "customer")
-    private List<CustomerLike> customerLikeList;
+    private List<Order> orders;
 
-    @OneToMany(mappedBy = "customer")
-    private Set<Opinion> opinions;
+    @OneToMany(mappedBy = "customers")
+    private List<Opinion> opinions;
 
-    public Set<Opinion> getOpinions() {
-        return opinions;
-    }
-
-    public void setOpinions(Set<Opinion> opinions) {
-        this.opinions = opinions;
-    }
-
-    public List<CustomerLike> getCustomerLikeList() {
-        return customerLikeList;
-    }
-
-    public void setCustomerLikeList(List<CustomerLike> customerLikeList) {
-        this.customerLikeList = customerLikeList;
-    }
-
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+    @ManyToMany(mappedBy = "customersLike")
+    private List<Game> games;
 }

@@ -1,10 +1,16 @@
 package pfr.backgamesloc.cities.DAL.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Data;
+import pfr.backgamesloc.adresses.DAL.entities.Address;
+
+import java.util.List;
 
 @Entity
 @Table(name = "city")
+@Data
 public class City {
 
     @Id
@@ -21,35 +27,7 @@ public class City {
     @Column(name = "city_name")
     private String cityName;
 
-    public Integer getCityId() {
-        return cityId;
-    }
-
-    public void setCityId(Integer cityId) {
-        this.cityId = cityId;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getCountryName() {
-        return countryName;
-    }
-
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
-    }
-
-    public String getCityName() {
-        return cityName;
-    }
-
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
-    }
+    @JsonBackReference
+    @OneToMany(mappedBy = "city")
+    private List<Address> addresses;
 }

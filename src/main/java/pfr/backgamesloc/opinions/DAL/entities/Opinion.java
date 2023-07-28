@@ -1,16 +1,22 @@
 package pfr.backgamesloc.opinions.DAL.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
 import pfr.backgamesloc.games.DAL.entities.Game;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "opinion")
+@Data
 public class Opinion {
-    @EmbeddedId
-    private OpinionKey id;
+
+    @Id
+    @Column(name = "opinion_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long opinionId;
 
     @Column(name = "comment")
     private String comment;
@@ -22,60 +28,11 @@ public class Opinion {
     private Date publishDate;
 
     @ManyToOne
-    @MapsId("gameId")
     @JoinColumn(name = "game_id")
-    private Game game;
+    private Game games;
 
     @ManyToOne
-    @MapsId("customerId")
     @JoinColumn(name = "customer_id")
-    private Customer customer;
+    private Customer customers;
 
-    public OpinionKey getId() {
-        return id;
-    }
-
-    public void setId(OpinionKey id) {
-        this.id = id;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    public Date getPublishDate() {
-        return publishDate;
-    }
-
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
 }
