@@ -1,17 +1,13 @@
 package pfr.backgamesloc.games.DAL.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
-import pfr.backgamesloc.editors.DAL.entities.Editor;
-import pfr.backgamesloc.languages.DAL.entities.Language;
-import pfr.backgamesloc.opinions.DAL.entities.Opinion;
-import pfr.backgamesloc.orders.DAL.entities.Order;
-import pfr.backgamesloc.tags.DAL.entities.Tag;
-import pfr.backgamesloc.types.DAL.entities.Type;
+import pfr.backgamesloc.shared.entities.Opinion;
+import pfr.backgamesloc.shared.entities.Order;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "game")
@@ -50,10 +46,12 @@ public class Game {
     @OneToMany(mappedBy = "games")
     private List<Opinion> opinions;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "type_id")
     private Type type;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "editor_id")
     private Editor editor;

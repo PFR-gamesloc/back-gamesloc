@@ -1,7 +1,8 @@
 package pfr.backgamesloc.customers.controllers.DTO;
 
 import lombok.Data;
-import pfr.backgamesloc.adresses.DAL.entities.Address;
+
+import pfr.backgamesloc.customers.DAL.entities.Address;
 
 @Data
 public class CustomerDto {
@@ -17,4 +18,5 @@ public class CustomerDto {
     private String phoneNumber;
 
     private Address address;
+
 }

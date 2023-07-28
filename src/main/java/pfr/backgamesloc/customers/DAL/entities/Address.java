@@ -1,10 +1,10 @@
-package pfr.backgamesloc.adresses.DAL.entities;
+package pfr.backgamesloc.customers.DAL.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import pfr.backgamesloc.cities.DAL.entities.City;
+import pfr.backgamesloc.customers.DAL.entities.City;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package pfr.backgamesloc.editors.DAL.entities;
+package pfr.backgamesloc.games.DAL.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -6,20 +6,22 @@ import pfr.backgamesloc.games.DAL.entities.Game;
 
 import java.util.List;
 
-@Entity
-@Table(name ="editor")
-@Data
-public class Editor {
 
+@Entity
+@Table(name = "language")
+@Data
+public class Language {
     @Id
-    @Column(name = "editor_id")
+    @Column(name = "language_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private short editorId;
+    private Integer languageId;
+
+    @Column(name = "acronym")
+    private String acronym;
 
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "editor")
+    @ManyToMany(mappedBy = "languages")
     private List<Game> games;
-
 }
