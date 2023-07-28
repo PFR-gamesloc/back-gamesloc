@@ -1,4 +1,4 @@
-package pfr.backgamesloc.orders.DAL.entities;
+package pfr.backgamesloc.shared.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name ="order")
+@Table(name ="orders")
 @Data
 public class Order {
 
@@ -30,7 +30,6 @@ public class Order {
     @Column(name = "price")
     private Float price;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;

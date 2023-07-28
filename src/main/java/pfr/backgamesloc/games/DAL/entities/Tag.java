@@ -1,4 +1,4 @@
-package pfr.backgamesloc.types.DAL.entities;
+package pfr.backgamesloc.games.DAL.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,18 +7,18 @@ import pfr.backgamesloc.games.DAL.entities.Game;
 import java.util.List;
 
 @Entity
-@Table(name = "type")
+@Table(name = "tag")
 @Data
-public class Type {
+public class Tag {
 
     @Id
-    @Column(name = "type_id")
+    @Column(name = "tag_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer typeId;
+    private short tagId;
 
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "type")
+    @ManyToMany(mappedBy = "tags")
     private List<Game> games;
 }

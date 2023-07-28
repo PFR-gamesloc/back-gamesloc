@@ -1,8 +1,10 @@
 package pfr.backgamesloc.customers.controllers.DTO;
 
 import lombok.Data;
-import pfr.backgamesloc.adresses.DAL.entities.Address;
-import pfr.backgamesloc.orders.DAL.entities.Order;
+import org.hibernate.collection.spi.PersistentBag;
+import pfr.backgamesloc.customers.DAL.entities.Address;
+
+import pfr.backgamesloc.shared.entities.Order;
 
 import java.util.List;
 
@@ -20,4 +22,5 @@ public class CustomerDto {
     private String phoneNumber;
 
     private Address address;
+
 }

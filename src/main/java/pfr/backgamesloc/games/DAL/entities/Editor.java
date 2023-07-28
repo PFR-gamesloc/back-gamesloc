@@ -1,27 +1,27 @@
-package pfr.backgamesloc.languages.DAL.entities;
+package pfr.backgamesloc.games.DAL.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import pfr.backgamesloc.games.DAL.entities.Game;
 
 import java.util.List;
 
-
 @Entity
-@Table(name = "language")
+@Table(name ="editor")
 @Data
-public class Language {
-    @Id
-    @Column(name = "language_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer languageId;
+public class Editor {
 
-    @Column(name = "acronym")
-    private String acronym;
+    @Id
+    @Column(name = "editor_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private short editorId;
 
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "languages")
+    @JsonBackReference
+    @OneToMany(mappedBy = "editor")
     private List<Game> games;
+
 }
