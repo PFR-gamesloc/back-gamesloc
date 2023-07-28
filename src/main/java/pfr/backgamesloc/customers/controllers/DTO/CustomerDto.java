@@ -2,9 +2,6 @@ package pfr.backgamesloc.customers.controllers.DTO;
 
 import lombok.Data;
 import pfr.backgamesloc.adresses.DAL.entities.Address;
-import pfr.backgamesloc.orders.DAL.entities.Order;
-
-import java.util.List;
 
 @Data
 public class CustomerDto {
