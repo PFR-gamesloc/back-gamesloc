@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import pfr.backgamesloc.games.DAL.GameRepository;
 import pfr.backgamesloc.games.DAL.entities.Game;
 
+import java.util.List;
+
 @Service
 public class GameService {
 
@@ -13,5 +15,9 @@ public class GameService {
 
     public Game getGameById(Integer id) {
         return this.gameRepository.findGameByGameId(id);
+    }
+
+    public List<Game> getAll(){
+        return (List<Game>) this.gameRepository.findAll();
     }
 }

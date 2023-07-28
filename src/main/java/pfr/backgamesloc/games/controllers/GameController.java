@@ -9,6 +9,9 @@ import pfr.backgamesloc.games.DAL.entities.Game;
 import pfr.backgamesloc.games.controllers.DTO.GameDTO;
 import pfr.backgamesloc.games.services.GameService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class GameController {
 
@@ -22,6 +25,19 @@ public class GameController {
     public GameDTO getGameById(@PathVariable Integer id){
         Game game = this.gameService.getGameById(id);
         return this.transformGameToGameDTO(game);
+    }
+
+    @GetMapping("games")
+    public List<GameDTO> getAll(){
+        List<Game> games = this.gameService.getAll();
+        List<GameDTO> gamesDTO = new ArrayList<>();
+
+        for(Game game : games){
+            gamesDTO.add(transformGameToGameDTO(game));
+        }
+
+        return gamesDTO;
+
     }
 
     private GameDTO transformGameToGameDTO(Game game){
