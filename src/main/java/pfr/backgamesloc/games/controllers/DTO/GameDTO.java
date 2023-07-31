@@ -1,6 +1,5 @@
 package pfr.backgamesloc.games.controllers.DTO;
 
-
 import lombok.Data;
 import pfr.backgamesloc.games.DAL.entities.Editor;
 import pfr.backgamesloc.games.DAL.entities.Type;
@@ -29,7 +28,5 @@ public class GameDTO {
     private Type type;
 
     private Editor editor;
-
-
 }
 
