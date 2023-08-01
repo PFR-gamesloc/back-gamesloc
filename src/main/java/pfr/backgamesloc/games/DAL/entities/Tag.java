@@ -1,9 +1,8 @@
 package pfr.backgamesloc.games.DAL.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import pfr.backgamesloc.games.DAL.entities.Game;
-
 import java.util.List;
 
 @Entity
@@ -19,6 +18,7 @@ public class Tag {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
+    @JsonIgnore
     private List<Game> games;
 }

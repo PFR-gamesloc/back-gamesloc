@@ -1,11 +1,12 @@
 package pfr.backgamesloc.games.DAL.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
-import pfr.backgamesloc.shared.entities.Opinion;
-import pfr.backgamesloc.shared.entities.Order;
+import pfr.backgamesloc.order.entities.Opinion;
+import pfr.backgamesloc.order.entities.Order;
 
 import java.util.List;
 
@@ -43,7 +44,8 @@ public class Game {
     @Column(name = "min_age")
     private Integer minAge;
 
-    @OneToMany(mappedBy = "games")
+    @OneToMany(fetch = FetchType.LAZY ,mappedBy = "games")
+    @JsonManagedReference
     private List<Opinion> opinions;
 
     @JsonManagedReference
@@ -56,7 +58,7 @@ public class Game {
     @JoinColumn(name = "editor_id")
     private Editor editor;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "tag_game",
             joinColumns = @JoinColumn(name = "game_id"),
@@ -64,15 +66,17 @@ public class Game {
     )
     private List<Tag> tags;
 
-    @ManyToMany
+
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
             name = "language_game",
             joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id")
     )
-    private List<Language> languages;
+    private List<Language> languages ;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinTable(
             name = "order_game",
             joinColumns = @JoinColumn(name = "game_id"),
@@ -81,10 +85,12 @@ public class Game {
     private List<Order> orders;
 
     @ManyToMany
+    @JsonBackReference
     @JoinTable(
             name = "customer_like",
             joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "customer_id")
     )
     private List<Customer> customersLike;
+
 }

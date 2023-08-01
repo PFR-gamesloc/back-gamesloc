@@ -1,6 +1,6 @@
-package pfr.backgamesloc.shared.entities;
+package pfr.backgamesloc.order.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
@@ -30,11 +30,13 @@ public class Order {
     @Column(name = "price")
     private Float price;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToMany(mappedBy = "orders")
+    @ManyToMany( fetch = FetchType.LAZY ,mappedBy = "orders")
+    @JsonManagedReference
     private List<Game> games;
 
 }

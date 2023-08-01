@@ -3,6 +3,10 @@ package pfr.backgamesloc.customers.controllers.DTO;
 import lombok.Data;
 
 import pfr.backgamesloc.customers.DAL.entities.Address;
+import pfr.backgamesloc.order.entities.Opinion;
+import pfr.backgamesloc.order.entities.Order;
+
+import java.util.List;
 
 @Data
 public class CustomerDto {
@@ -18,5 +22,15 @@ public class CustomerDto {
     private String phoneNumber;
 
     private Address address;
+
+    private List<Order> orders;
+
+    private List<Opinion> opinions;
+
+
+
+
+
+
 
 }

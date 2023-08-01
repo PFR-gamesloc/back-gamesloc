@@ -21,7 +21,7 @@ public class Editor {
     private String name;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "editor")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "editor")
     private List<Game> games;
 
 }

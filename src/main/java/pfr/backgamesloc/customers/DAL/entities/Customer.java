@@ -1,12 +1,11 @@
 package pfr.backgamesloc.customers.DAL.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 import pfr.backgamesloc.games.DAL.entities.Game;
-import pfr.backgamesloc.shared.entities.Opinion;
-import pfr.backgamesloc.shared.entities.Order;
+import pfr.backgamesloc.order.entities.Opinion;
+import pfr.backgamesloc.order.entities.Order;
 
 import java.util.List;
 
@@ -40,13 +39,15 @@ public class Customer {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(mappedBy = "customer")
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "customer")
     private List<Order> orders;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "customers")
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "customers")
     private List<Opinion> opinions;
 
     @ManyToMany(mappedBy = "customersLike")
+    @JsonManagedReference
     private List<Game> games;
 }

@@ -21,6 +21,6 @@ public class Type {
     private String name;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "type")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "type")
     private List<Game> games;
 }

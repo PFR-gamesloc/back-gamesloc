@@ -27,6 +27,6 @@ public class City {
     private String cityName;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "city")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "city")
     private List<Address> addresses;
 }
