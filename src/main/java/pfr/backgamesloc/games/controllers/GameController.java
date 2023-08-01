@@ -32,7 +32,7 @@ public class GameController {
         List<Game> games = this.gameService.findfavsByCUstomerId(id);
         List<GameDTO> gameDTOList = new ArrayList<>();
         for (Game game : games) {
-            gameDTOList.add(transformGameToGameDTO(game));
+            gameDTOList.add(this.transformGameTOGameDTO(game));
         }
         return gameDTOList;
     }
