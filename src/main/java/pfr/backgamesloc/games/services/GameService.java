@@ -17,8 +17,13 @@ public class GameService {
         return this.gameRepository.findGameByGameId(id);
     }
 
+    public List<Game> findfavsByCUstomerId(Integer id) {
+        return this.gameRepository.findGamesByCustomersLike_CustomerId(id);
+    }
+
     public List<Game> getAll(){
         return (List<Game>) this.gameRepository.findAll();
+
     }
 
 }

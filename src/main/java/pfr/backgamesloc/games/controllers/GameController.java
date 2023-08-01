@@ -27,6 +27,16 @@ public class GameController {
         return this.transformGameTOGameDTO(game);
     }
 
+    @GetMapping("customer/{id}/favs")
+    public List<GameDTO> findCustomerFavs(@PathVariable("id") Integer id) {
+        List<Game> games = this.gameService.findfavsByCUstomerId(id);
+        List<GameDTO> gameDTOList = new ArrayList<>();
+        for (Game game : games) {
+            gameDTOList.add(transformGameToGameDTO(game));
+        }
+        return gameDTOList;
+    }
+
     @GetMapping("games")
     public List<GameDTO> getAll() {
         List<Game> games = this.gameService.getAll();
