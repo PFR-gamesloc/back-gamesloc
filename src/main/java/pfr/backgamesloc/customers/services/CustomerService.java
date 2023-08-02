@@ -12,7 +12,6 @@ import pfr.backgamesloc.customers.DAL.entities.Customer;
 import pfr.backgamesloc.customers.DAL.entities.Role;
 import pfr.backgamesloc.shared.entities.Order;
 import pfr.backgamesloc.shared.repositories.OrderRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +39,7 @@ public class CustomerService implements UserDetailsService {
     public Customer getCustomerById(Integer id) {
          return this.customerRepository.findCustomerByCustomerId(id);
     }
+
 
     /**
      * Permet de retourner les commandes par l'id du customer qui les a passés
@@ -93,4 +93,8 @@ public class CustomerService implements UserDetailsService {
         //
         return this.customerRepository.save(customer);
     }
+    public List<Customer> getAll(){
+        return (List<Customer>) this.customerRepository.findAll();
+    }
+
 }

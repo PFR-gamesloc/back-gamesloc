@@ -11,19 +11,20 @@ import org.springframework.web.server.ResponseStatusException;
 import pfr.backgamesloc.customers.DAL.entities.Address;
 import pfr.backgamesloc.customers.DAL.entities.City;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
-import pfr.backgamesloc.customers.controllers.DTO.AddressDto;
 import pfr.backgamesloc.customers.controllers.DTO.CustomerToCreateDto;
 import pfr.backgamesloc.customers.controllers.DTO.CustomerDto;
 import pfr.backgamesloc.customers.services.AddressService;
 import pfr.backgamesloc.customers.services.CityService;
 import pfr.backgamesloc.customers.services.CustomerService;
-import pfr.backgamesloc.shared.DTO.OrderDTO;
+import pfr.backgamesloc.shared.controller.DTO.OrderDTO;
 import pfr.backgamesloc.shared.entities.Order;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/customer")
 public class CustomerController {
 
     @Autowired
@@ -38,7 +39,7 @@ public class CustomerController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @PostMapping("/api/create-customer")
+    @PostMapping("/create-customer")
     public CustomerDto createCustomer(@Valid @RequestBody CustomerToCreateDto customerToCreate) {
 
         Customer checker = this.customerService.findCustomerByMail(customerToCreate.getEmail());
@@ -70,17 +71,13 @@ public class CustomerController {
     }
 
 
-    @GetMapping("/customer/{id}")
+    @GetMapping("/{id}")
     public CustomerDto getCustomerById(@PathVariable("id") Integer id) {
         Customer customer = this.customerService.getCustomerById(id);
         return transformCustomerToCustomerDto(customer);
     }
 
-    public CustomerDto transformCustomerToCustomerDto(Customer customer) {
-        return modelMapper.map(customer, CustomerDto.class);
-    }
-
-    @GetMapping("/customer/{id}/orders")
+    @GetMapping("/{id}/orders")
     public List<OrderDTO> getOrdersByCustomerId(@PathVariable("id") Integer id) {
         List<Order> orders = this.customerService.getOrdersByCustomerId(id);
         List<OrderDTO> orderDTOList = new ArrayList<>();
@@ -89,8 +86,22 @@ public class CustomerController {
         }
         return orderDTOList;
     }
+    @GetMapping("/all")
+    public List<CustomerDto> getCustomers() {
+        List<Customer> customers = this.customerService.getAll();
+        List<CustomerDto> customerDtos = new ArrayList<>();
+        for (Customer customer : customers) {
+            customerDtos.add(this.transformCustomerToCustomerDto(customer));
 
-    public OrderDTO transformOrderToOrderDto(Order order) {
+        }
+        return customerDtos;
+    }
+
+    private OrderDTO transformOrderToOrderDto(Order order) {
         return modelMapper.map(order, OrderDTO.class);
+    }
+
+    public CustomerDto transformCustomerToCustomerDto(Customer customer) {
+        return modelMapper.map(customer, CustomerDto.class);
     }
 }

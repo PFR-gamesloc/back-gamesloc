@@ -1,6 +1,7 @@
 package pfr.backgamesloc.shared.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -29,10 +30,11 @@ public class Opinion {
     private Date publishDate;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "game_id")
     private Game games;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customers;

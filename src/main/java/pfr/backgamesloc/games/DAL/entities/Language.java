@@ -1,8 +1,9 @@
 package pfr.backgamesloc.games.DAL.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import pfr.backgamesloc.games.DAL.entities.Game;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class Language {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "languages")
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "languages")
+    @JsonBackReference
     private List<Game> games;
 }

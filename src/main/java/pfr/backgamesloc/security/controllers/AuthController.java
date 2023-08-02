@@ -25,7 +25,7 @@ import pfr.backgamesloc.security.controllers.DTO.LoginForm;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 @DependsOn("securityFilterChain")
 @RequiredArgsConstructor
 public class AuthController {

@@ -28,6 +28,6 @@ public class City implements Serializable {
     private String cityName;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "city")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "city")
     private List<Address> addresses;
 }

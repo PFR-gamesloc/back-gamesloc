@@ -25,4 +25,5 @@ public class GameService {
         return (List<Game>) this.gameRepository.findAll();
 
     }
+
 }

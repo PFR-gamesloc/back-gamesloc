@@ -22,9 +22,9 @@ public class GameController {
     private ModelMapper modelMapper;
 
     @GetMapping("game/{id}")
-    public GameDTO getGameById(@PathVariable Integer id){
+    public GameDTO getGameById(@PathVariable Integer id) {
         Game game = this.gameService.getGameById(id);
-        return this.transformGameToGameDTO(game);
+        return this.transformGameTOGameDTO(game);
     }
 
     @GetMapping("customer/{id}/favs")
@@ -32,25 +32,23 @@ public class GameController {
         List<Game> games = this.gameService.findfavsByCUstomerId(id);
         List<GameDTO> gameDTOList = new ArrayList<>();
         for (Game game : games) {
-            gameDTOList.add(transformGameToGameDTO(game));
+            gameDTOList.add(this.transformGameTOGameDTO(game));
         }
         return gameDTOList;
     }
 
     @GetMapping("games")
-    public List<GameDTO> getAll(){
+    public List<GameDTO> getAll() {
         List<Game> games = this.gameService.getAll();
-        List<GameDTO> gamesDTO = new ArrayList<>();
-
-        for(Game game : games){
-            gamesDTO.add(transformGameToGameDTO(game));
+        List<GameDTO> gameDTOS = new ArrayList<>();
+        for (Game game : games) {
+            gameDTOS.add(this.transformGameTOGameDTO(game));
         }
-
-        return gamesDTO;
-
+        return gameDTOS;
     }
 
-    private GameDTO transformGameToGameDTO(Game game){
+    public GameDTO transformGameTOGameDTO(Game game) {
         return this.modelMapper.map(game, GameDTO.class);
     }
+
 }

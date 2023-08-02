@@ -4,6 +4,9 @@ import lombok.Data;
 
 import pfr.backgamesloc.customers.DAL.entities.Address;
 import pfr.backgamesloc.customers.DAL.entities.Role;
+import pfr.backgamesloc.shared.entities.Opinion;
+import pfr.backgamesloc.shared.entities.Order;
+
 
 import java.util.List;
 
@@ -23,4 +26,8 @@ public class CustomerDto {
     private Address address;
 
     private List<Role> roles;
+
+    private List<Order> orders;
+
+    private List<Opinion> opinions;
 }

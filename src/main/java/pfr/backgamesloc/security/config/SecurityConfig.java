@@ -23,11 +23,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         var chain = http
                 .authorizeHttpRequests(customizer -> customizer
-                        .requestMatchers("/api/login").permitAll()
-                        .requestMatchers("/api/csrf").permitAll()
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/csrf").permitAll()
+                        .requestMatchers("/auth/**").authenticated()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .anyRequest().authenticated()
+                        .requestMatchers("/customer/**").authenticated()
+                        .anyRequest().permitAll()
                 ).csrf().disable()
                 .rememberMe(customizer -> customizer.alwaysRemember(true).key("demo"))
                 .build();
