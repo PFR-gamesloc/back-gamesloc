@@ -3,6 +3,9 @@ package pfr.backgamesloc.customers.controllers.DTO;
 import lombok.Data;
 
 import pfr.backgamesloc.customers.DAL.entities.Address;
+import pfr.backgamesloc.customers.DAL.entities.Role;
+
+import java.util.List;
 
 @Data
 public class CustomerDto {
@@ -19,4 +22,5 @@ public class CustomerDto {
 
     private Address address;
 
+    private List<Role> roles;
 }

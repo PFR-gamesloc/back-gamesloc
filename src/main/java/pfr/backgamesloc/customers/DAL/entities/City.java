@@ -5,12 +5,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "city")
 @Data
-public class City {
+public class City implements Serializable {
 
     @Id
     @Column(name = "city_id")
