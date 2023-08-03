@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import pfr.backgamesloc.security.controllers.DTO.LoginForm;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -20,19 +21,19 @@ public class TokenService {
         this.jwtEncoder = jwtEncoder;
     }
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(LoginForm authentication) {
         Instant now = Instant.now();
-
-        String scope = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
+        System.out.println("jsuis la");
+//        String scope = authentication.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.joining(" "));
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(3, ChronoUnit.HOURS))
-                .subject(authentication.getName())
-                .claim("scope", scope)
+                .subject(authentication.getUsername())
+//               .claim("scope", )
                 .build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
