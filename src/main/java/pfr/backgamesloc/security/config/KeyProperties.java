@@ -1,2 +1,10 @@
-package pfr.backgamesloc.security.config;public record KeyProperties() {
+package pfr.backgamesloc.security.config;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+
+@ConfigurationProperties(prefix = "rsa")
+public record KeyProperties(RSAPublicKey publicKey, RSAPrivateKey privateKey) {
 }

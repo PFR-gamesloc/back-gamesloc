@@ -18,10 +18,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
+import pfr.backgamesloc.security.Service.TokenService;
 import pfr.backgamesloc.security.controllers.DTO.CsrfResponse;
 import pfr.backgamesloc.customers.controllers.DTO.CustomerDto;
 import pfr.backgamesloc.security.controllers.DTO.LoginForm;
 
+import java.security.Principal;
 
 
 @RestController
@@ -30,48 +32,13 @@ import pfr.backgamesloc.security.controllers.DTO.LoginForm;
 @RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final TokenService tokenService;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    private final RememberMeServices rememberMeServices;
+    @PostMapping("/token")
+    public String token(Authentication authentication){
 
-    @PostMapping("/login")
-    public CustomerDto login(@Valid @RequestBody LoginForm form,
-                             BindingResult bindingResult,
-                             HttpServletRequest request,
-                             HttpServletResponse response) {
-        if (request.getUserPrincipal() != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"please, logout first ");
-        }
-
-        if (bindingResult.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"username or password incorrect");
-        }
-
-        try {
-            request.login(form.getUsername(), form.getPassword());
-        } catch (ServletException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"username or password incorrect");
-        }
-
-        var auth = (Authentication) request.getUserPrincipal();
-        var customer = (Customer) auth.getPrincipal();
-
-        rememberMeServices.loginSuccess(request, response, auth);
-
-        return this.trasnformCustomerToCustomerDTO(customer);
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request) throws ServletException {
-        request.logout();
-        return new ResponseEntity<>("Utilisateur Déconnecté", HttpStatus.OK);
-    }
-
-    @GetMapping("/current-user")
-    public CustomerDto getCurrentUser(@AuthenticationPrincipal Customer customer) {
-        return this.trasnformCustomerToCustomerDTO(customer);
+        String token = tokenService.generateToken(authentication);
+        return token;
     }
 
     @GetMapping("/csrf")
@@ -80,8 +47,5 @@ public class AuthController {
         return new CsrfResponse(csrf.getToken());
     }
 
-    private CustomerDto trasnformCustomerToCustomerDTO(Customer customer){
-        return modelMapper.map(customer, CustomerDto.class);
-    }
 }
 

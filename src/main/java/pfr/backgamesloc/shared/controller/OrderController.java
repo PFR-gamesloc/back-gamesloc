@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pfr.backgamesloc.shared.controller.DTO.OrderDTO;
 import pfr.backgamesloc.shared.entities.Order;
-import pfr.backgamesloc.order.services.OrderServices;
+import pfr.backgamesloc.shared.services.OrderServices;
 
 import java.util.ArrayList;
 import java.util.List;

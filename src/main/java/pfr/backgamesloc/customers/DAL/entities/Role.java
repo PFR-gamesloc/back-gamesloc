@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 @Table(name = "role")
-public class Role implements Serializable {
+public class Role {
 
     @Id
     @Column(name = "role_id")
