@@ -39,7 +39,7 @@ public class SecurityConfig{
              http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
-                        .requestMatchers("/auth/**", "product/**").permitAll()
+                        .requestMatchers("/auth/**", "/product/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )

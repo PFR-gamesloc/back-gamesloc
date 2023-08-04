@@ -2,10 +2,7 @@ package pfr.backgamesloc.games.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pfr.backgamesloc.games.DAL.entities.Game;
 import pfr.backgamesloc.games.controllers.DTO.GameDTO;
 import pfr.backgamesloc.games.services.GameService;
@@ -14,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@RequestMapping("/product")
 public class GameController {
 
     @Autowired
