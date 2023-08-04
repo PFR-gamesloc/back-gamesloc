@@ -1,13 +1,15 @@
 package pfr.backgamesloc.security.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import pfr.backgamesloc.security.Service.AuthService;
 import pfr.backgamesloc.security.Service.TokenService;
-import pfr.backgamesloc.security.controllers.DTO.LoginForm;
+import pfr.backgamesloc.security.controllers.DTO.AuthRequest;
+import pfr.backgamesloc.security.controllers.DTO.RegisterRequest;
 import pfr.backgamesloc.security.controllers.DTO.Token;
 
 
@@ -17,20 +19,18 @@ import pfr.backgamesloc.security.controllers.DTO.Token;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final TokenService tokenService;
+    private final AuthService service;
 
-    @PostMapping("/token")
-    public Token token(@RequestBody LoginForm authentication){
-        System.out.println(authentication);
-        String token = tokenService.generateToken(authentication);
-        return new Token(token);
+    @PostMapping("/register")
+    public ResponseEntity<Token> register(
+            @RequestBody RegisterRequest request
+            ) {
+        return ResponseEntity.ok(service.register(request));
     }
 
-    @GetMapping("/csrf")
-    public Token csrf(HttpServletRequest request) {
-        var csrf = (CsrfToken) request.getAttribute("_csrf");
-        return new Token(csrf.getToken());
+    @PostMapping("/authenticate")
+    public ResponseEntity<Token> token( @RequestBody AuthRequest request){
+        return ResponseEntity.ok(service.authenticate(request));
     }
-
 }
 
