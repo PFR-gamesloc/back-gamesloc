@@ -1,40 +1,71 @@
 package pfr.backgamesloc.security.Service;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import pfr.backgamesloc.security.controllers.DTO.LoginForm;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.stream.Collectors;
+import java.security.Key;
+import java.util.Date;
+
+import java.util.Map;
+import java.util.function.Function;
+
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
-    
-    private final JwtEncoder jwtEncoder;
 
-    public TokenService(JwtEncoder jwtEncoder) {
-        this.jwtEncoder = jwtEncoder;
+    private static final String SECRET_KEY = "1AFSy4ETjbqE2YaUf4EkH9G5JW8WIjgcNN2ZcyxlPOsw/cKJKDsOVXAMRhvXrJpp1njR2aVCt3SY7ve2orsfpHT38D89PFRq7aL9dR0UqL1DDYxukw2lzGFP0u7pazcJT43BhfoOSNxYqg2nlPK4X5IWYcJA/fPDQgPGLVNGe9SPxnaCB6YvxCMRpM+639qqqTgzRkM/zkivolmIK3tggfPKXpL42+GPUSyCfKIPiK1t9cGGWvdV5EfxikMwsmtlN14UeJMAlWt6ed7wW2qF3kgxWgwBQS9MVDV/yVfvYDBZK0bQfOGPLFvbU8M+b1fzep3Au1+gQ+unNzoEHz+jhaaPrXKYM4gqMZFS0WvYp1M=";
+    public String generateToken(
+            Map<String, Object> extractClaims,
+            UserDetails userDetails) {
+
+        return Jwts
+                .builder()
+                .setClaims(extractClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(getSignInKey())
+                .compact();
     }
 
-    public String generateToken(LoginForm authentication) {
-        Instant now = Instant.now();
-        System.out.println("jsuis la");
-//        String scope = authentication.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(" "));
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
 
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plus(3, ChronoUnit.HOURS))
-                .subject(authentication.getUsername())
-//               .claim("scope", )
-                .build();
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+    private Claims extractAllClaims(String token){
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private Key getSignInKey() {
+        byte[] keyBytes =Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public boolean isTokenValid(String token, UserDetails userDetails){
+        String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    public boolean isTokenExpired(String token){
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
     }
 }

@@ -1,9 +1,12 @@
-package pfr.backgamesloc.customers.controllers.DTO;
+package pfr.backgamesloc.security.controllers.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-@Data
-public class CustomerToCreateDto {
+@Data @RequiredArgsConstructor
+@AllArgsConstructor
+public class RegisterRequest {
 
     private String firstName;
     private String lastName;
