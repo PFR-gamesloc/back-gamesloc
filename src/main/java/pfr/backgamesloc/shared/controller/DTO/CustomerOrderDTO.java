@@ -9,5 +9,7 @@ public class CustomerOrderDTO {
 
     private String firstName;
 
-    private String LastName;
+    private String lastName;
+
+    private String email;
 }

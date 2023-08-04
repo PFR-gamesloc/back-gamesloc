@@ -56,7 +56,7 @@ public class Customer implements UserDetails {
 
     @ManyToMany(mappedBy = "customersLike")
     @JsonManagedReference
-    private List<Game> games;
+    private List<Game> favoriteGames;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

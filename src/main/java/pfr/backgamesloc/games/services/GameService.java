@@ -17,13 +17,12 @@ public class GameService {
         return this.gameRepository.findGameByGameId(id);
     }
 
-    public List<Game> findfavsByCUstomerId(Integer id) {
+    public List<Game> findFavsByCustomerId(Integer id) {
         return this.gameRepository.findGamesByCustomersLike_CustomerId(id);
     }
 
-    public List<Game> getAll(){
+    public List<Game> getAll() {
         return (List<Game>) this.gameRepository.findAll();
-
     }
 
 }
