@@ -2,6 +2,7 @@ package pfr.backgamesloc.games.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class GameController {
 
     @Autowired
@@ -29,7 +31,7 @@ public class GameController {
 
     @GetMapping("customer/{id}/favs")
     public List<GameDTO> findCustomerFavs(@PathVariable("id") Integer id) {
-        List<Game> games = this.gameService.findfavsByCUstomerId(id);
+        List<Game> games = this.gameService.findFavsByCustomerId(id);
         List<GameDTO> gameDTOList = new ArrayList<>();
         for (Game game : games) {
             gameDTOList.add(this.transformGameTOGameDTO(game));
