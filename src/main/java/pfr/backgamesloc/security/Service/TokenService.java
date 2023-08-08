@@ -29,7 +29,7 @@ public class TokenService {
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * (60 * 24)))
                 .signWith(getSignInKey())
                 .compact();
     }
@@ -67,5 +67,13 @@ public class TokenService {
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public String getJwt(String authHeader){
+        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+            return null;
+        }
+
+        return authHeader.substring(7);
     }
 }

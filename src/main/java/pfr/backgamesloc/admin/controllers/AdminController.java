@@ -27,7 +27,6 @@ public class AdminController {
         List<CustomerDto> customerDtos = new ArrayList<>();
         for (Customer customer : customers) {
             customerDtos.add(this.transformCustomerToCustomerDto(customer));
-
         }
         return customerDtos;
     }

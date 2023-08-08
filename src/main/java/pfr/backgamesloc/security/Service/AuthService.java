@@ -1,5 +1,6 @@
 package pfr.backgamesloc.security.Service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.misc.MultiMap;
 import org.modelmapper.ModelMapper;
@@ -115,4 +116,5 @@ public class AuthService {
         String token = tokenService.generateToken(roles, customer);
         return new Token(token);
     }
+
 }
