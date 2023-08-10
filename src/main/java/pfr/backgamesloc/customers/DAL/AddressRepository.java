@@ -14,4 +14,6 @@ public interface AddressRepository extends CrudRepository<Address, Integer> {
             String streetName,
             String ComplementaryAddress,
             Integer cityId);
+
+    Address findAddressByCustomers_email(String email);
 }

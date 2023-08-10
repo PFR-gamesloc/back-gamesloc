@@ -97,4 +97,7 @@ public class CustomerService implements UserDetailsService {
         return (List<Customer>) this.customerRepository.findAll();
     }
 
+    public Customer getCustomerByUsername(String username) {
+        return this.customerRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("this user is not found"));
+    }
 }

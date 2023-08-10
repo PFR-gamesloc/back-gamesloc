@@ -30,4 +30,8 @@ public class AddressService {
     public Address save(Address address){
         return this.addressRepository.save(address);
     }
+
+    public Address findAddressByCustomerUsername(String email) {
+        return this.addressRepository.findAddressByCustomers_email(email);
+    }
 }

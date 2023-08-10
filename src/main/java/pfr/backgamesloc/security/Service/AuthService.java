@@ -112,7 +112,7 @@ public class AuthService {
         for (Role role :customer.getRoles() ){
             rolesString.append(role.getRoleName()).append(" ");
         }
-        roles.put("Role", rolesString.toString());
+        roles.put("role", rolesString.toString());
         String token = tokenService.generateToken(roles, customer);
         return new Token(token);
     }

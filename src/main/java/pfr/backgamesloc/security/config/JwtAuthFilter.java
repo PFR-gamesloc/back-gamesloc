@@ -50,6 +50,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         userEmail = tokenService.extractUsername(jwt);
 
+        if (tokenService.isTokenExpired(jwt)){
+            return;
+        }
+
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null ){
             UserDetails user = customerService.loadUserByUsername(userEmail);
 
