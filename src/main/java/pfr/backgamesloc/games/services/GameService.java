@@ -3,7 +3,7 @@ package pfr.backgamesloc.games.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pfr.backgamesloc.games.DAL.GameRepository;
-import pfr.backgamesloc.games.DAL.entities.Game;
+import pfr.backgamesloc.games.DAL.entities.*;
 
 import java.util.List;
 
@@ -23,6 +23,10 @@ public class GameService {
 
     public List<Game> getAll() {
         return (List<Game>) this.gameRepository.findAll();
+    }
+
+    public Game createANewGame(Game game) {
+        return this.gameRepository.save(game);
     }
 
 }

@@ -3,7 +3,7 @@ package pfr.backgamesloc.games.DAL.entities;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
 import pfr.backgamesloc.shared.entities.Opinion;
 import pfr.backgamesloc.shared.entities.Order;
@@ -13,6 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "game")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Game {
 
     @Id
@@ -92,5 +94,4 @@ public class Game {
             inverseJoinColumns = @JoinColumn(name = "customer_id")
     )
     private List<Customer> customersLike;
-
 }
