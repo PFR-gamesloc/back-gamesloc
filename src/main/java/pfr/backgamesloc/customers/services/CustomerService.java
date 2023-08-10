@@ -94,7 +94,7 @@ public class CustomerService implements UserDetailsService {
         return this.customerRepository.save(customer);
     }
     public List<Customer> getAll(){
-        return (List<Customer>) this.customerRepository.findAll();
+        return (List<Customer>) this.customerRepository.findAllByOrderByCustomerIdAsc();
     }
 
     public Customer getCustomerByUsername(String username) {

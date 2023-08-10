@@ -1,9 +1,9 @@
-package pfr.backgamesloc.shared.controller;
+package pfr.backgamesloc.admin.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pfr.backgamesloc.shared.controller.DTO.OrderDTO;
 import pfr.backgamesloc.shared.entities.Order;
@@ -13,16 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin
-public class OrderController {
+@RequestMapping("/admin/order")
+@RequiredArgsConstructor
+public class AdminOrderController {
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    ModelMapper modelMapper;
+    private final OrderServices orderServices;
 
-    @Autowired
-    OrderServices orderServices;
-
-    @GetMapping("/orders")
+    @GetMapping("/all")
     public List<OrderDTO> getOrders() {
         List<Order> orders = this.orderServices.getAllOrder();
         List<OrderDTO> orderDTOS = new ArrayList<>();
