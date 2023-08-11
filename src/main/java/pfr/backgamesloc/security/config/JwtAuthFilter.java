@@ -48,11 +48,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         jwt = authHeader.substring(7);
 
-        userEmail = tokenService.extractUsername(jwt);
-
         if (tokenService.isTokenExpired(jwt)){
             return;
         }
+        userEmail = tokenService.extractUsername(jwt);
+
 
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null ){
             UserDetails user = customerService.loadUserByUsername(userEmail);
