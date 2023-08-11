@@ -100,4 +100,10 @@ public class CustomerService implements UserDetailsService {
     public Customer getCustomerByUsername(String username) {
         return this.customerRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("this user is not found"));
     }
+
+    public Customer editCustomerById(Integer customerId, Customer customer) {
+        customer.setCustomerId(customerId);
+//        return this.customerRepository.save(customer);
+        return customer;
+    }
 }
