@@ -36,6 +36,16 @@ public class GameController {
         return gameDTOList;
     }
 
+    @GetMapping("/games")
+    public List<GameDTO> getAll() {
+        List<Game> games = this.gameService.getAll();
+        List<GameDTO> gameDTOS = new ArrayList<>();
+        for (Game game : games) {
+            gameDTOS.add(this.transformGameTOGameDTO(game));
+        }
+        return gameDTOS;
+    }
+
     public GameDTO transformGameTOGameDTO(Game game) {
         return this.modelMapper.map(game, GameDTO.class);
     }
