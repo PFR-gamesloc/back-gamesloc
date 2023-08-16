@@ -6,5 +6,5 @@ import pfr.backgamesloc.customers.DAL.entities.City;
 
 @Repository
 public interface CityRepository extends CrudRepository<City, Integer> {
-
+    City findByPostalCodeAndCityName(String postalCode, String cityName);
 }

@@ -14,7 +14,7 @@ public class OrderServices {
     private OrderRepository orderRepository;
 
     public List<Order> getAllOrder() {
-        return (List<Order>) this.orderRepository.findAll();
+        return this.orderRepository.findAllByOrderByOrderIdAsc();
     }
 
 }

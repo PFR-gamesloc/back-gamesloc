@@ -13,7 +13,7 @@ public class CustomerAddressEditDTO {
 
     private String ComplementaryAddress;
 
-    private Number postalCode;
+    private String postalCode;
 
     private String cityName;
 }

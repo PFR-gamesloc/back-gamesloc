@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import pfr.backgamesloc.customers.services.CustomerService;
+import pfr.backgamesloc.games.services.GameService;
 import pfr.backgamesloc.security.Service.AuthService;
 import pfr.backgamesloc.security.Service.TokenService;
 import pfr.backgamesloc.security.controllers.DTO.AuthRequest;
@@ -27,6 +28,8 @@ public class AuthController {
     private final TokenService tokenService;
 
     private final CustomerService customerService;
+
+    private final GameService gameService;
 
     @Autowired
     private ModelMapper modelMapper;

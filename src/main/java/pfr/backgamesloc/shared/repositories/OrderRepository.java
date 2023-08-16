@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface OrderRepository extends CrudRepository<Order, Integer> {
     List<Order> findOrderByCustomer_CustomerId(Integer id);
+
+    List<Order> findAllByOrderByOrderIdAsc();
 }
