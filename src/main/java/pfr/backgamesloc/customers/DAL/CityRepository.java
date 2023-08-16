@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface CityRepository extends CrudRepository<City, Integer> {
     Optional<City> findCityByCityNameAndPostalCode(String cityName, String postalCode);
+
+    City findByPostalCodeAndCityName(String postalCode, String cityName);
 }

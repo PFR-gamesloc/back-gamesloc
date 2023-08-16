@@ -85,7 +85,6 @@ public class CustomerService implements UserDetailsService {
 
     public Customer editCustomerById(Integer customerId, Customer customer) {
         customer.setCustomerId(customerId);
-//        return this.customerRepository.save(customer);
-        return customer;
+        return this.customerRepository.save(customer);
     }
 }

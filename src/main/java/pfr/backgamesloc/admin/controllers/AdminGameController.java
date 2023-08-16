@@ -1,11 +1,12 @@
 package pfr.backgamesloc.admin.controllers;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 import pfr.backgamesloc.games.DAL.entities.*;
 import pfr.backgamesloc.games.controllers.DTO.*;
 import pfr.backgamesloc.games.services.GameService;
@@ -14,12 +15,15 @@ import pfr.backgamesloc.shared.services.LanguageServices;
 import pfr.backgamesloc.shared.services.TagServices;
 import pfr.backgamesloc.shared.services.TypeServices;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/admin/game")
 @RequiredArgsConstructor
+
 public class AdminGameController {
     private final GameService gameService;
 
@@ -105,35 +109,58 @@ public class AdminGameController {
 
     @PostMapping("/add")
     public ResponseEntity<Game> addAGame(@RequestBody GameEditDTO gameEditDTO) {
-        if (gameEditDTO.getGameName() == null || gameEditDTO.getGameName().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Le jeu n'a pas pu être créé");
-        }
+        Game game = processGameEditDTO(gameEditDTO);
+        this.gameService.createANewGame(game);
+        return new ResponseEntity<>(game, HttpStatus.CREATED);
+    }
 
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<Game> editAGame(@PathVariable("id") Integer id, @RequestBody GameEditDTO gameEditDTO) {
+        Game game = processGameEditDTO(gameEditDTO);
+        game.setGameId(id);
+        this.gameService.editGameById(id, game);
+        return new ResponseEntity<>(game, HttpStatus.CREATED);
+    }
+
+    private Game processGameEditDTO(GameEditDTO gameEditDTO) {
         Game game = this.modelMapper.map(gameEditDTO, Game.class);
 
         game.setType(typeServices.getTypeById(gameEditDTO.getTypeId()));
         game.setEditor(editorServices.getEditorById(gameEditDTO.getEditorId()));
 
         List<Language> languages = new ArrayList<>();
-        for (Integer id : gameEditDTO.getLanguages()) {
-            languages.add(languageServices.getLanguageById(id));
+        for (Integer languageId : gameEditDTO.getLanguages()) {
+            languages.add(languageServices.getLanguageById(languageId));
         }
-
         game.setLanguages(languages);
 
         List<Tag> tags = new ArrayList<>();
-        for (Integer id : gameEditDTO.getTags()) {
-            tags.add(tagServices.getTagById(id));
+        for (Integer tagId : gameEditDTO.getTags()) {
+            tags.add(tagServices.getTagById(tagId));
         }
-
         game.setTags(tags);
 
-        System.out.println(game.getEditor().getName());
-
-        this.gameService.createANewGame(game);
-
-        return new ResponseEntity<>(game, HttpStatus.CREATED);
-
+        return game;
     }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteAGame(@PathVariable("id") Integer id) {
+        this.gameService.deleteById(id);
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile imageFile) {
+        try {
+            String fileName = imageFile.getOriginalFilename();
+            File uploadPath = new File("/assets/img"); // Remplacez ce chemin par le chemin absolu vers votre dossier de destination
+            File targetFile = new File(uploadPath, fileName); // Utilisez le constructeur File avec un répertoire parent et un nom de fichier
+
+            imageFile.transferTo(targetFile);
+            return ResponseEntity.ok("Image uploaded successfully");
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("Failed to upload image");
+        }
+    }
+
 
 }

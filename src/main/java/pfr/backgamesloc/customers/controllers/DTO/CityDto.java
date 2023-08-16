@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CityDto {
-    private Number postalCode;
+    private String postalCode;
     private String cityName;
 }

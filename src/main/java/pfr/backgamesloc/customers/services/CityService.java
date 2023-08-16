@@ -21,4 +21,11 @@ public class CityService {
         return this.cityRepository.findCityByCityNameAndPostalCode(cityName, postalCode).orElse(null);
     }
 
+    public City createCity(City city) {
+        return this.cityRepository.save(city);
+    }
+
+    public City getCityByPostalCodeAndName(String postalCode, String cityName) {
+        return this.cityRepository.findByPostalCodeAndCityName(postalCode, cityName);
+    }
 }

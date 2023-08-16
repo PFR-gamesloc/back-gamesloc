@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pfr.backgamesloc.customers.DAL.entities.Customer;
 import pfr.backgamesloc.customers.services.CustomerService;
 import pfr.backgamesloc.security.Service.AuthService;
 import pfr.backgamesloc.security.Service.TokenService;
@@ -33,7 +32,8 @@ public class AuthController {
 
     private final CustomerService customerService;
 
-
+    @Autowired
+    private ModelMapper modelMapper;
 
     @PostMapping("/register")
     public ResponseEntity<Boolean> register(@RequestBody @Valid RegisterRequest request, BindingResult bindingResult) {
@@ -54,8 +54,8 @@ public class AuthController {
 
     @GetMapping("/is-authenticated")
     public ResponseEntity<Boolean> isAuthenticated(HttpServletRequest request) {
-        if (request.getHeader("Authorization") == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Aucun token");
+        if (request.getHeader("Authorization") == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Aucun token");
         }
         String jwt = tokenService.getJwt(request.getHeader("Authorization"));
         String userEmail = tokenService.extractUsername(jwt);

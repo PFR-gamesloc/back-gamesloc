@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 import pfr.backgamesloc.customers.DAL.CustomerRepository;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
 import pfr.backgamesloc.games.DAL.GameRepository;
-import pfr.backgamesloc.games.DAL.entities.*;
+import pfr.backgamesloc.games.DAL.entities.Game;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class GameService {
 
     @Autowired
@@ -29,13 +30,12 @@ public class GameService {
     }
 
     public List<Game> getAll() {
-        return (List<Game>) this.gameRepository.findAll();
+        return this.gameRepository.findAllByOrderByGameIdAsc();
     }
 
     public Game createANewGame(Game game) {
         return this.gameRepository.save(game);
     }
-
 
     public List<Game> addGameToFavorites(Integer customerId, Integer gameId) {
         Customer customer = customerRepository.findById(Long.valueOf(customerId))
@@ -48,5 +48,14 @@ public class GameService {
         customerRepository.save(customer);
 
         return customerRepository.save(customer).getFavoriteGames();
+    }
+
+    public Game editGameById(Integer gameId, Game game) {
+        game.setGameId(gameId);
+        return this.createANewGame(game);
+    }
+
+    public void deleteById(Integer gameId) {
+        this.gameRepository.deleteById(gameId);
     }
 }

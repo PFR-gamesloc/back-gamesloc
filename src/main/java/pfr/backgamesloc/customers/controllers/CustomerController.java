@@ -12,6 +12,7 @@ import pfr.backgamesloc.customers.DAL.entities.City;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
 import pfr.backgamesloc.customers.controllers.DTO.*;
 import pfr.backgamesloc.customers.services.AddressService;
+import pfr.backgamesloc.customers.services.CityService;
 import pfr.backgamesloc.customers.services.CustomerService;
 import pfr.backgamesloc.games.DAL.entities.Game;
 import pfr.backgamesloc.games.controllers.DTO.GameLikeDto;
@@ -37,6 +38,8 @@ public class CustomerController {
     private final AddressService addressService;
 
     private final GameService gameService;
+
+    private final CityService cityService;
 
     @GetMapping("/me")
     public CustomerDto getCurrentCustomer(HttpServletRequest request) {
@@ -131,7 +134,8 @@ public class CustomerController {
         cityDto.setPostalCode(customerAddressEditDTO.getPostalCode());
         cityDto.setCityName(customerAddressEditDTO.getCityName());
 
-        address.setCity(this.transformCityDTOtoCity(cityDto));
+        City city = this.findOrCreateCity(cityDto);
+        address.setCity(city);
 
         customer.setAddress(address);
 
@@ -139,6 +143,18 @@ public class CustomerController {
 
         return ResponseEntity.ok(customer);
     }
+
+    private City findOrCreateCity(CityDto cityDto) {
+        City existingCity = this.cityService.getCityByPostalCodeAndName(cityDto.getPostalCode(), cityDto.getCityName());
+
+        if (existingCity != null) {
+            return existingCity;
+        } else {
+            City newCity = transformCityDTOtoCity(cityDto);
+            return this.cityService.createCity(newCity);
+        }
+    }
+
 
     public City transformCityDTOtoCity(CityDto cityDto) {
         return this.modelMapper.map(cityDto, City.class);
