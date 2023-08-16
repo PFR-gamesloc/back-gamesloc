@@ -1,11 +1,13 @@
 package pfr.backgamesloc.customers.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import pfr.backgamesloc.customers.DAL.CustomerRepository;
 import pfr.backgamesloc.customers.DAL.RoleRepository;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
@@ -69,32 +71,12 @@ public class CustomerService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return customerRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND ,"username" + username + " not found"));
     }
 
 
-    /**
-     * Permet de sauvegarder un utilisateur
-     * @param customer l'utilisateur qui va être créé
-     * @return l'utilisateur qui vient d'être créé
-     */
-    public Customer createCustomer(Customer customer) {
-        //set l'id du customer a null car problème avec le modelMapper qui récupère l'id de la city
-        customer.setCustomerId(null);
-
-        //Encode le password et le set a l'utilisateur qui va être créé
-        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
-
-        //récupère le Role User et le set à l'utilisateur qui va être créé
-        List<Role> roles = new ArrayList<>();
-        roles.add(this.roleRepository.findRoleByRoleName("USER"));
-        customer.setRoles(roles);
-
-        //
-        return this.customerRepository.save(customer);
-    }
     public List<Customer> getAll(){
-        return (List<Customer>) this.customerRepository.findAllByOrderByCustomerIdAsc();
+        return this.customerRepository.findAllByOrderByCustomerIdAsc();
     }
 
     public Customer getCustomerByUsername(String username) {
