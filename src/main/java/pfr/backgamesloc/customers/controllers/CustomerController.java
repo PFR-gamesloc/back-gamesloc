@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pfr.backgamesloc.customers.DAL.entities.Address;
 import pfr.backgamesloc.customers.DAL.entities.City;
@@ -70,6 +71,16 @@ public class CustomerController {
             gameDTOList.add(this.transformGameTOGameDTO(game));
         }
         return gameDTOList;
+    }
+
+
+    @PostMapping("/me/favs/add")
+    //@PreAuthorize("hasRole('USER')")
+    public Customer addToFavorites(HttpServletRequest request, @RequestBody AddGameToCustomerFavDTO gameToAdd) {
+        System.out.println(gameToAdd);
+        Customer customer = this.getCurrentUser(request);
+        this.gameService.addGameToFavorites(customer.getCustomerId(), gameToAdd.getId());
+        return customer;
     }
 
 
