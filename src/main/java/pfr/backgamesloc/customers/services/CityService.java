@@ -12,12 +12,13 @@ public class CityService {
     private CityRepository cityRepository;
 
     /**
-     * Permet de retourner la city grâce a sa city
-     * @param id
-     * @return une city ou null
+     *
+     * @param cityName
+     * @param postalCode
+     * @return a city or throw an Exception
      */
-    public City findCityById(Integer id){
-        return this.cityRepository.findById(id).orElse(null);
+    public City findCityByCityNameAndPostalCode(String cityName, String postalCode){
+        return this.cityRepository.findCityByCityNameAndPostalCode(cityName, postalCode).orElse(null);
     }
 
 }

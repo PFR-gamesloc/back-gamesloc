@@ -1,15 +1,11 @@
 package pfr.backgamesloc.security.Service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.misc.MultiMap;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,10 +15,8 @@ import pfr.backgamesloc.customers.DAL.entities.Address;
 import pfr.backgamesloc.customers.DAL.entities.City;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
 import pfr.backgamesloc.customers.DAL.entities.Role;
-import pfr.backgamesloc.customers.controllers.DTO.CustomerDto;
 import pfr.backgamesloc.customers.services.AddressService;
 import pfr.backgamesloc.customers.services.CityService;
-import pfr.backgamesloc.customers.services.CustomerService;
 import pfr.backgamesloc.security.controllers.DTO.AuthRequest;
 import pfr.backgamesloc.security.controllers.DTO.RegisterRequest;
 import pfr.backgamesloc.security.controllers.DTO.Token;
@@ -50,48 +44,55 @@ public class AuthService {
 
     private final RoleRepository roleRepository;
 
-    public Token register(RegisterRequest request) {
+    private final PasswordEncoder passwordEncoder;
 
-        Optional<Customer> checker = this.customerRepository.findByEmail(request.getEmail());
+    public boolean register(RegisterRequest request) {
 
-        if (checker.isEmpty()) {
+        Optional<Customer> emailChecker = this.customerRepository.findByEmail(request.getEmail());
+
+        Optional<Customer> phoneChecker = this.customerRepository.findByPhoneNumber(request.getPhoneNumber());
+
+        if (emailChecker.isEmpty() && phoneChecker.isEmpty()) {
+
             Customer customer = modelMapper.map(request, Customer.class);
-            City city = this.cityService.findCityById(request.getCityId());
+            Address address = modelMapper.map(request, Address.class);
+            City city = modelMapper.map(request,City.class);
+
+            city.setCityName(city.getCityName().replaceAll("[-']", " ").toUpperCase());
+
+            System.out.println(city.getCityName());
+
+            city = this.cityService.findCityByCityNameAndPostalCode(city.getCityName(), request.getPostalCode());
 
             if (city == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "the city doesn't exist");
             }
 
-            Address address = modelMapper.map(request, Address.class);
 
             address.setCity(city);
 
-            if (this.addressService.findIfAddressAddressAlreadyExist(address) == null) {
-                this.addressService.save(address);
+            Address findedAddress = this.addressService.findIfAddressAddressAlreadyExist(address);
+
+            if (findedAddress == null) {
+                findedAddress = this.addressService.save(address);
             }
-            customer.setAddress(address);
+            address.setStreetName(address.getStreetName().toUpperCase());
+            address.getCity().setCityName(address.getCity().getCityName().toUpperCase());
+            customer.setFirstName(customer.getFirstName().toUpperCase());
+            customer.setLastName(customer.getLastName().toUpperCase());
+            customer.setAddress(findedAddress);
 
             List<Role> roles = new ArrayList<>();
             roles.add(this.roleRepository.findRoleByRoleName("USER"));
             customer.setRoles(roles);
 
+            customer.setPassword(passwordEncoder.encode(customer.getPassword()));
             this.customerRepository.save(customer);
 
-            HashMap<String, Object> rolesHM = new HashMap<>();
-
-            StringBuilder rolesString = new StringBuilder();
-
-            for (Role role :customer.getRoles() ){
-                rolesString.append(role.getRoleName()).append(" ");
-            }
-
-            rolesHM.put("Role", rolesString.toString());
-
-            String token = tokenService.generateToken(rolesHM, customer);
-            return new Token(token);
+            return true;
         }
         else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "the user already exist with the email: " + request.getEmail() );
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
         }
     }
 
@@ -105,7 +106,7 @@ public class AuthService {
                 )
         );
 
-        Customer customer = customerRepository.findByEmail(request.getUsername()).orElseThrow();
+        Customer customer = customerRepository.findByEmail(request.getUsername()).orElseThrow(()-> new UsernameNotFoundException("user not found"));
 
         HashMap<String, Object> roles = new HashMap<>();
         StringBuilder rolesString = new StringBuilder();
