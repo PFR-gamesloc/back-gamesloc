@@ -51,7 +51,7 @@ public class Customer implements UserDetails {
     private List<Order> orders;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "customers")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "customer")
     private List<Opinion> opinions;
 
     @ManyToMany(mappedBy = "customersLike")

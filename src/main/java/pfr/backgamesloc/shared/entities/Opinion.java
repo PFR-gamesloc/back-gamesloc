@@ -1,8 +1,6 @@
 package pfr.backgamesloc.shared.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
@@ -32,11 +30,11 @@ public class Opinion {
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "game_id")
-    private Game games;
+    private Game game;
 
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private Customer customers;
+    private Customer customer;
 
 }
