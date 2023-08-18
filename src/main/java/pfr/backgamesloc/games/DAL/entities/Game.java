@@ -46,7 +46,7 @@ public class Game {
     @Column(name = "min_age")
     private Integer minAge;
 
-    @OneToMany(fetch = FetchType.LAZY ,mappedBy = "games")
+    @OneToMany(fetch = FetchType.LAZY ,mappedBy = "game")
     @JsonManagedReference
     private List<Opinion> opinions;
 

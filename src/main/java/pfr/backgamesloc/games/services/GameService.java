@@ -2,24 +2,29 @@ package pfr.backgamesloc.games.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pfr.backgamesloc.customers.DAL.CustomerRepository;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
 import pfr.backgamesloc.games.DAL.GameRepository;
 import pfr.backgamesloc.games.DAL.entities.Game;
+import pfr.backgamesloc.shared.entities.Opinion;
+import pfr.backgamesloc.shared.repositories.OpinionRepository;
 
 import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class GameService {
 
-    @Autowired
-    private GameRepository gameRepository;
 
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final GameRepository gameRepository;
+
+    private final CustomerRepository customerRepository;
+
+    private final OpinionRepository opinionRepository;
 
     public Game getGameById(Integer id) {
         return this.gameRepository.findGameByGameId(id);
@@ -53,6 +58,10 @@ public class GameService {
     public Game editGameById(Integer gameId, Game game) {
         game.setGameId(gameId);
         return this.createANewGame(game);
+    }
+
+    public List<Opinion> findAllOpinions(Integer gameId){
+        return this.opinionRepository.findOpinionsByGame_GameId(gameId);
     }
 
     public void deleteById(Integer gameId) {

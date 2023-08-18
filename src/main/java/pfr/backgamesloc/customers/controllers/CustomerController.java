@@ -1,11 +1,14 @@
 package pfr.backgamesloc.customers.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pfr.backgamesloc.customers.DAL.entities.Address;
 import pfr.backgamesloc.customers.DAL.entities.City;
@@ -19,6 +22,7 @@ import pfr.backgamesloc.games.controllers.DTO.GameLikeDto;
 import pfr.backgamesloc.games.services.GameService;
 import pfr.backgamesloc.security.Service.TokenService;
 import pfr.backgamesloc.shared.controller.DTO.OrderDTO;
+import pfr.backgamesloc.shared.entities.Opinion;
 import pfr.backgamesloc.shared.entities.Order;
 
 import java.util.ArrayList;
@@ -158,5 +162,16 @@ public class CustomerController {
 
     public City transformCityDTOtoCity(CityDto cityDto) {
         return this.modelMapper.map(cityDto, City.class);
+    }
+
+
+    @PostMapping("/comment/add")
+    public ResponseEntity<Boolean> postAComment(@RequestBody @Valid CommentToPost commentToPost, BindingResult bindingResult, HttpServletRequest request) throws BindException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+        Customer customer = getCurrentUser(request);
+        this.customerService.postAComment(commentToPost, customer);
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }
