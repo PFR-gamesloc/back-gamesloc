@@ -50,6 +50,19 @@ public class GameService {
         return customerRepository.save(customer).getFavoriteGames();
     }
 
+    public List<Game> removeGameToFavorites(Integer customerId, Integer gameId) {
+        Customer customer = customerRepository.findById(Long.valueOf(customerId))
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Game not found"));
+        customer.getFavoriteGames().remove(game);
+        game.getCustomersLike().remove(customer);
+        customerRepository.save(customer);
+
+        return customerRepository.save(customer).getFavoriteGames();
+    }
+
     public Game editGameById(Integer gameId, Game game) {
         game.setGameId(gameId);
         return this.createANewGame(game);

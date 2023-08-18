@@ -1,5 +1,6 @@
 package pfr.backgamesloc.customers.controllers;
 
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,7 @@ import pfr.backgamesloc.games.controllers.DTO.GameLikeDto;
 import pfr.backgamesloc.games.services.GameService;
 import pfr.backgamesloc.security.Service.TokenService;
 import pfr.backgamesloc.shared.controller.DTO.OrderDTO;
+import pfr.backgamesloc.shared.controller.DTO.OrderTestDTO;
 import pfr.backgamesloc.shared.entities.Order;
 
 import java.util.ArrayList;
@@ -84,6 +86,22 @@ public class CustomerController {
         Customer customer = this.getCurrentUser(request);
         this.gameService.addGameToFavorites(customer.getCustomerId(), gameToAdd.getId());
         return customer;
+    }
+
+    @PostMapping("/me/favs/remove")
+    //@PreAuthorize("hasRole('USER')")
+    public Customer removeToFavorites(HttpServletRequest request, @RequestBody AddGameToCustomerFavDTO gameToRemove) {
+        System.out.println(gameToRemove);
+        Customer customer = this.getCurrentUser(request);
+        this.gameService.removeGameToFavorites(customer.getCustomerId(), gameToRemove.getId());
+        return customer;
+    }
+
+    @PostMapping("/me/create-order")
+    public ResponseEntity<Customer> addOrder(HttpServletRequest request, @RequestBody OrderTestDTO orderDTO) {
+        Customer customer = this.getCurrentUser(request);
+        customerService.createOrderForCustomer(customer, orderDTO);
+        return ResponseEntity.ok(customer);
     }
 
 

@@ -11,10 +11,16 @@ import org.springframework.web.server.ResponseStatusException;
 import pfr.backgamesloc.customers.DAL.CustomerRepository;
 import pfr.backgamesloc.customers.DAL.RoleRepository;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
-import pfr.backgamesloc.customers.DAL.entities.Role;
+import pfr.backgamesloc.games.DAL.GameRepository;
+import pfr.backgamesloc.games.DAL.entities.Game;
+import pfr.backgamesloc.shared.controller.DTO.OrderTestDTO;
 import pfr.backgamesloc.shared.entities.Order;
 import pfr.backgamesloc.shared.repositories.OrderRepository;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -22,6 +28,9 @@ public class CustomerService implements UserDetailsService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private  GameRepository gameRepository;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -86,5 +95,31 @@ public class CustomerService implements UserDetailsService {
     public Customer editCustomerById(Integer customerId, Customer customer) {
         customer.setCustomerId(customerId);
         return this.customerRepository.save(customer);
+    }
+
+    public Order createOrderForCustomer(Customer customer, OrderTestDTO orderDTO){
+
+        System.out.println("Création Order");
+        Order order = new Order();
+        order.setOrderDate(new Date());// Utilisez la date actuelle
+        LocalDate localDate = LocalDate.now().plusWeeks(1L);
+        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        order.setReturnDate(date);
+        order.setPrice(orderDTO.getPrice());
+        order.setCustomer(customer);
+        System.out.println(orderDTO);
+        List<Game> games = new ArrayList<>();
+        for(Integer gameId : orderDTO.getGamesId()){
+            Game game = gameRepository.findGameByGameId(gameId);
+            games.add(game);
+
+            // Ici je fais comme pour add favorite
+            game.getOrders().add(order);
+        }
+
+        order.setGames(games);
+        System.out.println("Set mes jeux");
+
+        return orderRepository.save(order);
     }
 }
