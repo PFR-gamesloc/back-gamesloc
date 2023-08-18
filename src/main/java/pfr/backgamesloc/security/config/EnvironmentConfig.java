@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pfr.backgamesloc.admin.services.FileStorageService;
 import pfr.backgamesloc.customers.services.CustomerService;
 
 @Configuration
@@ -17,6 +18,9 @@ public class EnvironmentConfig {
     private final PasswordEncoder passwordEncoder;
 
     private final CustomerService customerService;
+
+    private final FileStorageService fileStorageService;
+
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -27,6 +31,11 @@ public class EnvironmentConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public void fileStorageInit() {
+        fileStorageService.init();
     }
 
 }

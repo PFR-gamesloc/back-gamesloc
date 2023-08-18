@@ -2,11 +2,18 @@ package pfr.backgamesloc.admin.controllers;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import pfr.backgamesloc.admin.controllers.DTO.FileInfoDTO;
+import pfr.backgamesloc.admin.controllers.DTO.ResponseMessage;
+import pfr.backgamesloc.admin.services.FileStorageService;
 import pfr.backgamesloc.games.DAL.entities.*;
 import pfr.backgamesloc.games.controllers.DTO.*;
 import pfr.backgamesloc.games.services.GameService;
@@ -36,6 +43,8 @@ public class AdminGameController {
     private final TagServices tagServices;
 
     private final ModelMapper modelMapper;
+
+    private final FileStorageService storageService;
 
     @GetMapping("/all")
     public List<GameDTO> getAll() {
@@ -108,9 +117,10 @@ public class AdminGameController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Game> addAGame(@RequestBody GameEditDTO gameEditDTO) {
+    public ResponseEntity<Game> addAGame(@RequestBody GameEditDTO gameEditDTO) throws IOException {
+        System.out.println(gameEditDTO);
         Game game = processGameEditDTO(gameEditDTO);
-        this.gameService.createANewGame(game);
+        this.gameService.createANewGame(gameEditDTO);
         return new ResponseEntity<>(game, HttpStatus.CREATED);
     }
 
@@ -144,23 +154,30 @@ public class AdminGameController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteAGame(@PathVariable("id") Integer id) {
-        this.gameService.deleteById(id);
+    public ResponseEntity<Boolean> deleteAGame(@PathVariable("id") Integer id) {
+        System.out.println("ici");
+        Boolean isDeleted = this.gameService.deleteById(id);
+        return new ResponseEntity<>(isDeleted, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile imageFile) {
+    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+        String message = "";
+        System.out.println(file.getName());
         try {
-            String fileName = imageFile.getOriginalFilename();
-            File uploadPath = new File("/assets/img"); // Remplacez ce chemin par le chemin absolu vers votre dossier de destination
-            File targetFile = new File(uploadPath, fileName); // Utilisez le constructeur File avec un répertoire parent et un nom de fichier
-
-            imageFile.transferTo(targetFile);
-            return ResponseEntity.ok("Image uploaded successfully");
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body("Failed to upload image");
+            storageService.save(file);
+            message = "Uploaded the file successfully : " + file.getOriginalFilename();
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+        } catch (Exception e) {
+            message = "Could not upload the file: " + file.getOriginalFilename() + ". Error: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
         }
     }
 
+    @GetMapping("/{fileName:.+}")
+    public ResponseEntity<UrlResource> getListFiles(@PathVariable("fileName") String fileName) {
+        UrlResource file = storageService.load(fileName);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
 
 }
