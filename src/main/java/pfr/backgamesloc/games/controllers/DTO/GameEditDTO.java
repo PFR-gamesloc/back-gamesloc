@@ -1,6 +1,7 @@
 package pfr.backgamesloc.games.controllers.DTO;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class GameEditDTO {
 
     private Float gamePrice;
 
-    private String image;
+    private MultipartFile image;
 
     private Integer minPlayer;
 
