@@ -1,11 +1,16 @@
 package pfr.backgamesloc.games.controllers;
 
+import com.nimbusds.jose.jwk.ECKey;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pfr.backgamesloc.admin.services.FileStorageService;
 import pfr.backgamesloc.customers.controllers.DTO.CustomerOpinionDto;
 import pfr.backgamesloc.games.DAL.entities.Game;
 import pfr.backgamesloc.games.controllers.DTO.GameDTO;
@@ -21,11 +26,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GameController {
 
-    @Autowired
-    private GameService gameService;
+    private final GameService gameService;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    private final FileStorageService storageService;
 
     @GetMapping("game/{id}")
     public GameDTO getGameById(@PathVariable Integer id) {
@@ -66,6 +71,15 @@ public class GameController {
         }
 
         return new ResponseEntity<>(opinionDTOList,HttpStatus.OK);
+    }
+
+    @GetMapping("/img/{fileName:.+}")
+    public ResponseEntity<UrlResource> getListFiles(@PathVariable("fileName") String fileName) {
+        UrlResource file = storageService.load(fileName);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(file);
     }
 
     public GameDTO transformGameTOGameDTO(Game game) {

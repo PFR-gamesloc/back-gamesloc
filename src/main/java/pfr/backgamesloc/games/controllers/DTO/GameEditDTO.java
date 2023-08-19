@@ -2,6 +2,10 @@ package pfr.backgamesloc.games.controllers.DTO;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
+import pfr.backgamesloc.games.DAL.entities.Editor;
+import pfr.backgamesloc.games.DAL.entities.Language;
+import pfr.backgamesloc.games.DAL.entities.Tag;
+import pfr.backgamesloc.games.DAL.entities.Type;
 
 import java.util.List;
 
@@ -30,7 +34,7 @@ public class GameEditDTO {
 
     private Integer editorId;
 
-    private List<Integer> languages;
+    private List<Integer> languagesId;
 
-    private List<Integer> tags;
+    private List<Integer> tagsId;
 }

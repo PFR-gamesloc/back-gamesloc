@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class EditorDTO {
-    private short editorId;
+    private Integer editorId;
     private String name;
 }

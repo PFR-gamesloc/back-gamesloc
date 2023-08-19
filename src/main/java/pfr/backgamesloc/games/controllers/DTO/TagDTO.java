@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class TagDTO {
-    private short tagId;
+    private Integer tagId;
     private String name;
 }

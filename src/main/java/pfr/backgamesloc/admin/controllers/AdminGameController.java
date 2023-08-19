@@ -64,6 +64,26 @@ public class AdminGameController {
         return this.modelMapper.map(game, GameDTO.class);
     }
 
+    @GetMapping("/{id}")
+    public GameEditDTO gameToEdit(@PathVariable("id") Integer id){
+         Game game = this.gameService.getGameById(id);
+         GameEditDTO gameEditDTO = this.modelMapper.map(game, GameEditDTO.class);
+
+         List<Integer> GameEditDtoIds = new ArrayList<>();
+         for (Language language : game.getLanguages()){
+             GameEditDtoIds.add(language.getLanguageId());
+         }
+         gameEditDTO.setLanguagesId(GameEditDtoIds);
+
+        GameEditDtoIds.clear();
+        for (Tag tag : game.getTags()){
+            GameEditDtoIds.add(tag.getTagId());
+        }
+        gameEditDTO.setTagsId(GameEditDtoIds);
+        return gameEditDTO ;
+
+    }
+
     @GetMapping("/editors")
     public List<EditorDTO> allTheEditors() {
         List<Editor> editors = this.editorServices.getAll();
@@ -129,6 +149,7 @@ public class AdminGameController {
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<Game> editAGame(@PathVariable("id") Integer id, @RequestBody GameEditDTO gameEditDTO) {
+        System.out.println(gameEditDTO);
         Game game = processGameEditDTO(gameEditDTO);
         game.setGameId(id);
         this.gameService.editGameById(id, game);
@@ -142,13 +163,13 @@ public class AdminGameController {
         game.setEditor(editorServices.getEditorById(gameEditDTO.getEditorId()));
 
         List<Language> languages = new ArrayList<>();
-        for (Integer languageId : gameEditDTO.getLanguages()) {
+        for (Integer languageId : gameEditDTO.getLanguagesId()) {
             languages.add(languageServices.getLanguageById(languageId));
         }
         game.setLanguages(languages);
 
         List<Tag> tags = new ArrayList<>();
-        for (Integer tagId : gameEditDTO.getTags()) {
+        for (Integer tagId : gameEditDTO.getTagsId()) {
             tags.add(tagServices.getTagById(tagId));
         }
         game.setTags(tags);
@@ -185,11 +206,4 @@ public class AdminGameController {
                     .body(new ResponseMessage("Could not upload the file: " + e.getMessage()));
         }
     }
-
-    @GetMapping("/{fileName:.+}")
-    public ResponseEntity<UrlResource> getListFiles(@PathVariable("fileName") String fileName) {
-        UrlResource file = storageService.load(fileName);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-    }
-
 }
