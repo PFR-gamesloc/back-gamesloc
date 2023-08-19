@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 import java.util.Map;
@@ -24,12 +26,15 @@ public class TokenService {
             Map<String, Object> extractClaims,
             UserDetails userDetails) {
 
+        LocalDate localDate = LocalDate.now().plusWeeks(1L);
+        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
         return Jwts
                 .builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * (60 * 24)))
+                .setExpiration(date)
                 .signWith(getSignInKey())
                 .compact();
     }
