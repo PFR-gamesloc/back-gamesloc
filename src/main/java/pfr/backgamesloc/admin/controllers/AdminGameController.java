@@ -3,6 +3,7 @@ package pfr.backgamesloc.admin.controllers;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.apache.tomcat.jni.FileInfo;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +25,9 @@ import pfr.backgamesloc.shared.services.TypeServices;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,10 +121,9 @@ public class AdminGameController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Game> addAGame(@RequestBody GameEditDTO gameEditDTO) throws IOException {
-        System.out.println(gameEditDTO);
-        Game game = processGameEditDTO(gameEditDTO);
-        this.gameService.createANewGame(gameEditDTO);
+    public ResponseEntity<Game> addAGame(@RequestBody GameEditDTO gameEditDTO) {
+        Game game = this.processGameEditDTO(gameEditDTO);
+        this.gameService.createANewGame(game);
         return new ResponseEntity<>(game, HttpStatus.CREATED);
     }
 
@@ -162,15 +165,24 @@ public class AdminGameController {
 
     @PostMapping("/upload")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
-        String message = "";
-        System.out.println(file.getName());
         try {
+            if (file == null || file.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new ResponseMessage("File is empty or not provided."));
+            }
+
+            String originalFilename = file.getOriginalFilename();
+            Path existingFilePath = Paths.get("uploads", originalFilename);
+
+            Files.deleteIfExists(existingFilePath);
+
             storageService.save(file);
-            message = "Uploaded the file successfully : " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-        } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + ". Error: " + e.getMessage();
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseMessage("Uploaded the file successfully: " + originalFilename));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseMessage("Could not upload the file: " + e.getMessage()));
         }
     }
 

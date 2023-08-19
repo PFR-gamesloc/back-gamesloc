@@ -18,7 +18,7 @@ public class GameEditDTO {
 
     private Float gamePrice;
 
-    private MultipartFile image;
+    private String image;
 
     private Integer minPlayer;
 
