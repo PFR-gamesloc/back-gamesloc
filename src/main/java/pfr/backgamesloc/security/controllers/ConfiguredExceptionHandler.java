@@ -44,9 +44,4 @@ public class ConfiguredExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleExpiredJwtException(ExpiredJwtException e){
         return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
     }
-
-    @ExceptionHandler(BindException.class)
-    public ResponseEntity<Object> handleBindException(BindException e){
-        return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
-    }
 }
