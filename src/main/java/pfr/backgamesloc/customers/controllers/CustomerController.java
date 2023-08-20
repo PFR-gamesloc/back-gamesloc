@@ -83,7 +83,6 @@ public class CustomerController {
 
     @PostMapping("/me/favs/add")
     public ResponseEntity<CustomerDto> addToFavorites(HttpServletRequest request, @RequestBody AddGameToCustomerFavDTO gameToAdd) {
-        System.out.println(gameToAdd);
         Customer customer = this.getCurrentUser(request);
         this.gameService.addGameToFavorites(customer.getCustomerId(), gameToAdd.getId());
         return  new ResponseEntity<>(this.modelMapper.map(customer,CustomerDto.class),HttpStatus.OK);
@@ -91,7 +90,6 @@ public class CustomerController {
 
     @PostMapping("/me/favs/remove")
     public ResponseEntity<CustomerDto> removeToFavorites(HttpServletRequest request, @RequestBody AddGameToCustomerFavDTO gameToRemove) {
-        System.out.println(gameToRemove);
         Customer customer = this.getCurrentUser(request);
         this.gameService.removeGameToFavorites(customer.getCustomerId(), gameToRemove.getId());
         return  new ResponseEntity<>(this.modelMapper.map(customer,CustomerDto.class),HttpStatus.OK);

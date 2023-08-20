@@ -60,7 +60,6 @@ public class AuthService {
 
             city.setCityName(city.getCityName().replaceAll("[-']", " ").toUpperCase());
 
-            System.out.println(city.getCityName());
 
             city = this.cityService.findCityByCityNameAndPostalCode(city.getCityName(), request.getPostalCode());
 
