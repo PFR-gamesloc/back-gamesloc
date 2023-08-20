@@ -1,16 +1,11 @@
-package pfr.backgamesloc.games.controllers.DTO;
+package pfr.backgamesloc.admin.controllers.DTO;
 
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
-import pfr.backgamesloc.games.DAL.entities.Editor;
-import pfr.backgamesloc.games.DAL.entities.Language;
-import pfr.backgamesloc.games.DAL.entities.Tag;
-import pfr.backgamesloc.games.DAL.entities.Type;
 
 import java.util.List;
 
 @Data
-public class GameEditDTO {
+public class GameEditRequest {
 
     private Integer gameId;
 

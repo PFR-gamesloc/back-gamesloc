@@ -25,11 +25,7 @@ public class FileStorageService {
 
     public void save(MultipartFile file) {
         try {
-            System.out.println("la");
-            System.out.println(root.toAbsolutePath());
             if (file.getOriginalFilename() != null) {
-                System.out.println("ici");
-                System.out.println(file.getInputStream());
                 Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
             }
         } catch (Exception e) {

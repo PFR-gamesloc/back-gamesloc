@@ -13,10 +13,8 @@ import pfr.backgamesloc.customers.DAL.CustomerRepository;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
 import pfr.backgamesloc.games.DAL.GameRepository;
 import pfr.backgamesloc.games.DAL.entities.Game;
-import pfr.backgamesloc.shared.controller.DTO.OrderTestDTO;
+import pfr.backgamesloc.shared.controller.DTO.CreateOrderRequest;
 import pfr.backgamesloc.customers.controllers.DTO.CommentToPost;
-import pfr.backgamesloc.games.DAL.GameRepository;
-import pfr.backgamesloc.games.DAL.entities.Game;
 import pfr.backgamesloc.shared.entities.Opinion;
 import pfr.backgamesloc.shared.entities.Order;
 import pfr.backgamesloc.shared.repositories.OpinionRepository;
@@ -40,15 +38,6 @@ public class CustomerService implements UserDetailsService {
     private final CustomerRepository customerRepository;
 
     private final OpinionRepository opinionRepository;
-    /**
-     * Permet de retourner un utilisateur trouvé grâce à son id
-     * @param id
-     * @return un customer
-     */
-    public Customer getCustomerById(Integer id) {
-         return this.customerRepository.findCustomerByCustomerId(id);
-    }
-
 
     /**
      * Permet de retourner les commandes par l'id du customer qui les a passés
@@ -57,15 +46,6 @@ public class CustomerService implements UserDetailsService {
      */
     public List<Order> getOrdersByCustomerId(Integer id) {
         return this.orderRepository.findOrderByCustomer_CustomerId(id);
-    }
-
-    /**
-     * Permet de retrouver un utilisateur grâce a son mail
-     * @param email
-     * @return l'utilisateur s'il a été trouvé, sinon null
-     */
-    public Customer findCustomerByMail(String email){
-        return this.customerRepository.findByEmail(email).orElse(null);
     }
 
     /**
@@ -81,7 +61,6 @@ public class CustomerService implements UserDetailsService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND ,"username" + username + " not found"));
     }
 
-
     public List<Customer> getAll(){
         return this.customerRepository.findAllByOrderByCustomerIdAsc();
     }
@@ -95,9 +74,8 @@ public class CustomerService implements UserDetailsService {
         return this.customerRepository.save(customer);
     }
 
-    public Order createOrderForCustomer(Customer customer, OrderTestDTO orderDTO) {
+    public Order createOrderForCustomer(Customer customer, CreateOrderRequest orderDTO) {
 
-        System.out.println("Création Order");
         Order order = new Order();
         order.setOrderDate(new Date());// Utilisez la date actuelle
         LocalDate localDate = LocalDate.now().plusWeeks(1L);
@@ -105,19 +83,15 @@ public class CustomerService implements UserDetailsService {
         order.setReturnDate(date);
         order.setPrice(orderDTO.getPrice());
         order.setCustomer(customer);
-        System.out.println(orderDTO);
         List<Game> games = new ArrayList<>();
         for (Integer gameId : orderDTO.getGamesId()) {
             Game game = gameRepository.findGameByGameId(gameId);
             games.add(game);
-
-            // Ici je fais comme pour add favorite
+            game.setStock(game.getStock()-1);
             game.getOrders().add(order);
         }
 
         order.setGames(games);
-        System.out.println("Set mes jeux");
-
         return orderRepository.save(order);
     }
     public void postAComment(CommentToPost commentToPost, Customer customer) {

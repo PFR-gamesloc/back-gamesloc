@@ -9,6 +9,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,13 +33,10 @@ public class AuthController {
 
     private final CustomerService customerService;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @PostMapping("/register")
-    public ResponseEntity<Boolean> register(@RequestBody @Valid RegisterRequest request, BindingResult bindingResult) {
+    public ResponseEntity<Boolean> register(@RequestBody @Valid RegisterRequest request, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Problèmes lors de l'inscription.");
+            throw new BindException(bindingResult);
         }
         return ResponseEntity.ok(service.register(request));
 
@@ -62,6 +60,5 @@ public class AuthController {
         UserDetails user = customerService.loadUserByUsername(userEmail);
         return ResponseEntity.ok(tokenService.isTokenValid(jwt, user));
     }
-
 }
 

@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
-    Customer findCustomerByCustomerId(Integer id);
     Optional<Customer> findByEmail(String userName);
     List<Customer> findAllByOrderByCustomerIdAsc();
-
     Optional<Customer> findByPhoneNumber(String phoneNumber);
 }

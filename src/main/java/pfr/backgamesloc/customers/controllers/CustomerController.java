@@ -1,16 +1,15 @@
 package pfr.backgamesloc.customers.controllers;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pfr.backgamesloc.customers.DAL.entities.Address;
 import pfr.backgamesloc.customers.DAL.entities.City;
 import pfr.backgamesloc.customers.DAL.entities.Customer;
@@ -23,8 +22,7 @@ import pfr.backgamesloc.games.controllers.DTO.GameLikeDto;
 import pfr.backgamesloc.games.services.GameService;
 import pfr.backgamesloc.security.Service.TokenService;
 import pfr.backgamesloc.shared.controller.DTO.OrderDTO;
-import pfr.backgamesloc.shared.controller.DTO.OrderTestDTO;
-import pfr.backgamesloc.shared.entities.Opinion;
+import pfr.backgamesloc.shared.controller.DTO.CreateOrderRequest;
 import pfr.backgamesloc.shared.entities.Order;
 
 import java.util.ArrayList;
@@ -48,87 +46,79 @@ public class CustomerController {
     private final CityService cityService;
 
     @GetMapping("/me")
-    public CustomerDto getCurrentCustomer(HttpServletRequest request) {
+    public ResponseEntity<CustomerDto> getCurrentCustomer(HttpServletRequest request) {
         Customer customer = this.getCurrentUser(request);
-        return transformCustomerToCustomerDto(customer);
+        return new ResponseEntity<>(modelMapper.map(customer, CustomerDto.class),HttpStatus.OK);
     }
 
     @GetMapping("/me/orders")
-    public List<OrderDTO> getOrdersOfCurrentUser(HttpServletRequest request) {
+    public ResponseEntity<List<OrderDTO>> getOrdersOfCurrentUser(HttpServletRequest request) {
         Customer customer = this.getCurrentUser(request);
         List<Order> orders = this.customerService.getOrdersByCustomerId(customer.getCustomerId());
         List<OrderDTO> orderDTOList = new ArrayList<>();
         for (Order order : orders) {
-            orderDTOList.add(this.transformOrderToOrderDto(order));
+            orderDTOList.add(modelMapper.map(order, OrderDTO.class));
         }
-        return orderDTOList;
+        return new ResponseEntity<>(orderDTOList, HttpStatus.OK);
     }
 
     @GetMapping("/me/address")
-    public AddressDto getAddressOfCurrentUser(HttpServletRequest request) {
+    public ResponseEntity<AddressDto> getAddressOfCurrentUser(HttpServletRequest request) {
         Customer customer = this.getCurrentUser(request);
         Address address = this.addressService.findAddressByCustomerUsername(customer.getEmail());
-        return modelMapper.map(address, AddressDto.class);
+        return  new ResponseEntity<>(modelMapper.map(address, AddressDto.class), HttpStatus.OK);
     }
 
     @GetMapping("/me/favs")
-    public List<GameLikeDto> getLikesOfCurrentUser(HttpServletRequest request) {
+    public ResponseEntity<List<GameLikeDto>> getLikesOfCurrentUser(HttpServletRequest request) {
         Customer customer = this.getCurrentUser(request);
         List<Game> games = this.gameService.findFavsByCustomerId(customer.getCustomerId());
         List<GameLikeDto> gameDTOList = new ArrayList<>();
         for (Game game : games) {
-            gameDTOList.add(this.transformGameTOGameDTO(game));
+            gameDTOList.add(this.modelMapper.map(game,GameLikeDto.class));
         }
-        return gameDTOList;
+        return new ResponseEntity<>(gameDTOList, HttpStatus.OK);
     }
 
 
     @PostMapping("/me/favs/add")
-    //@PreAuthorize("hasRole('USER')")
-    public Customer addToFavorites(HttpServletRequest request, @RequestBody AddGameToCustomerFavDTO gameToAdd) {
+    public ResponseEntity<CustomerDto> addToFavorites(HttpServletRequest request, @RequestBody AddGameToCustomerFavDTO gameToAdd) {
         System.out.println(gameToAdd);
         Customer customer = this.getCurrentUser(request);
         this.gameService.addGameToFavorites(customer.getCustomerId(), gameToAdd.getId());
-        return customer;
+        return  new ResponseEntity<>(this.modelMapper.map(customer,CustomerDto.class),HttpStatus.OK);
     }
 
     @PostMapping("/me/favs/remove")
-    //@PreAuthorize("hasRole('USER')")
-    public Customer removeToFavorites(HttpServletRequest request, @RequestBody AddGameToCustomerFavDTO gameToRemove) {
+    public ResponseEntity<CustomerDto> removeToFavorites(HttpServletRequest request, @RequestBody AddGameToCustomerFavDTO gameToRemove) {
         System.out.println(gameToRemove);
         Customer customer = this.getCurrentUser(request);
         this.gameService.removeGameToFavorites(customer.getCustomerId(), gameToRemove.getId());
-        return customer;
+        return  new ResponseEntity<>(this.modelMapper.map(customer,CustomerDto.class),HttpStatus.OK);
     }
 
     @PostMapping("/me/create-order")
-    public ResponseEntity<Customer> addOrder(HttpServletRequest request, @RequestBody OrderTestDTO orderDTO) {
+    public ResponseEntity<CustomerDto> addOrder(HttpServletRequest request, @RequestBody @Valid CreateOrderRequest orderDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Informations manquantes");
+        }
         Customer customer = this.getCurrentUser(request);
         customerService.createOrderForCustomer(customer, orderDTO);
-        return ResponseEntity.ok(customer);
-    }
-
-
-    private OrderDTO transformOrderToOrderDto(Order order) {
-        return modelMapper.map(order, OrderDTO.class);
-    }
-
-    private CustomerDto transformCustomerToCustomerDto(Customer customer) {
-        return modelMapper.map(customer, CustomerDto.class);
+        return  new ResponseEntity<>(this.modelMapper.map(customer,CustomerDto.class),HttpStatus.OK);
     }
 
     private Customer getCurrentUser(HttpServletRequest request) {
         String jwt = tokenService.getJwt(request.getHeader("Authorization"));
         String userEmail = tokenService.extractUsername(jwt);
-        return this.customerService.getCustomerByUsername(userEmail);
+        return  this.customerService.getCustomerByUsername(userEmail);
     }
 
-    public GameLikeDto transformGameTOGameDTO(Game game) {
-        return this.modelMapper.map(game, GameLikeDto.class);
-    }
 
     @PutMapping("/edit")
-    public ResponseEntity<Customer> editCustomer(HttpServletRequest request, @RequestBody CustomerEditDTO customerEdit) {
+    public ResponseEntity<CustomerDto> editCustomer(HttpServletRequest request, @RequestBody CustomerEditDTO customerEdit, BindingResult bindingResult) throws BindException {
+        if (bindingResult.hasErrors()){
+            throw new BindException(bindingResult);
+        }
         Customer customer = this.getCurrentUser(request);
         customer.setFirstName(customerEdit.getFirstName());
         customer.setLastName(customerEdit.getLastName());
@@ -137,11 +127,11 @@ public class CustomerController {
 
         this.customerService.editCustomerById(customer.getCustomerId(), customer);
 
-        return ResponseEntity.ok(customer);
+        return  new ResponseEntity<>(this.modelMapper.map(customer,CustomerDto.class),HttpStatus.OK);
     }
 
     @PutMapping("/edit/address")
-    public ResponseEntity<Customer> editCustomerAddress(HttpServletRequest request, @RequestBody CustomerAddressEditDTO customerAddressEditDTO) {
+    public ResponseEntity<CustomerDto> editCustomerAddress(HttpServletRequest request, @RequestBody CustomerAddressEditDTO customerAddressEditDTO) {
         Customer customer = this.getCurrentUser(request);
 
         Address address = customer.getAddress();
@@ -163,25 +153,29 @@ public class CustomerController {
 
         this.customerService.editCustomerById(customer.getCustomerId(), customer);
 
-        return ResponseEntity.ok(customer);
+        return  new ResponseEntity<>(this.modelMapper.map(customer,CustomerDto.class),HttpStatus.OK);
     }
 
     private City findOrCreateCity(CityDto cityDto) {
-        City existingCity = this.cityService.getCityByPostalCodeAndName(cityDto.getPostalCode(), cityDto.getCityName());
+        City existingCity = this.cityService.findCityByCityNameAndPostalCode(cityDto.getPostalCode(), cityDto.getCityName());
 
         if (existingCity != null) {
             return existingCity;
         } else {
-            City newCity = transformCityDTOtoCity(cityDto);
+            City newCity = this.modelMapper.map(cityDto, City.class);
             return this.cityService.createCity(newCity);
         }
     }
 
-
-    public City transformCityDTOtoCity(CityDto cityDto) {
-        return this.modelMapper.map(cityDto, City.class);
+    @GetMapping("/cities/{param}")
+    public ResponseEntity<List<CityDto>> getCitiesForRegister(@PathVariable("param") String param) {
+        param += "%";
+        List<CityDto> cityDto = new ArrayList<>();
+        for (City city : this.cityService.getAllLikeParam(param)) {
+            cityDto.add(modelMapper.map(city, CityDto.class));
+        }
+        return new ResponseEntity<>(cityDto, HttpStatus.OK);
     }
-
 
     @PostMapping("/comment/add")
     public ResponseEntity<Boolean> postAComment(@RequestBody @Valid CommentToPost commentToPost, BindingResult bindingResult, HttpServletRequest request) throws BindException {

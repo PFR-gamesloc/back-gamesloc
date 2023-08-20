@@ -13,5 +13,4 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 
     List<Game> findAllByOrderByGameIdAsc();
 
-    Game deleteGameByGameId(Integer id);
 }

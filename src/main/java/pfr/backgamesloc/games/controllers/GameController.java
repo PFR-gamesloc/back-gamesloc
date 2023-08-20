@@ -1,9 +1,7 @@
 package pfr.backgamesloc.games.controllers;
 
-import com.nimbusds.jose.jwk.ECKey;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,29 +31,29 @@ public class GameController {
     private final FileStorageService storageService;
 
     @GetMapping("game/{id}")
-    public GameDTO getGameById(@PathVariable Integer id) {
+    public ResponseEntity<GameDTO> getGameById(@PathVariable Integer id) {
         Game game = this.gameService.getGameById(id);
-        return this.transformGameTOGameDTO(game);
+        return  new ResponseEntity<>(this.modelMapper.map(game, GameDTO.class), HttpStatus.OK);
     }
 
     @GetMapping("customer/{id}/favs")
-    public List<GameDTO> findCustomerFavs(@PathVariable("id") Integer id) {
+    public ResponseEntity<List<GameDTO>> findCustomerFavs(@PathVariable("id") Integer id) {
         List<Game> games = this.gameService.findFavsByCustomerId(id);
         List<GameDTO> gameDTOList = new ArrayList<>();
         for (Game game : games) {
-            gameDTOList.add(this.transformGameTOGameDTO(game));
+            gameDTOList.add(this.modelMapper.map(game, GameDTO.class));
         }
-        return gameDTOList;
+        return new ResponseEntity<>(gameDTOList, HttpStatus.OK);
     }
 
     @GetMapping("/games")
-    public List<GameDTO> getAll() {
+    public ResponseEntity<List<GameDTO>> getAll() {
         List<Game> games = this.gameService.getAll();
         List<GameDTO> gameDTOS = new ArrayList<>();
         for (Game game : games) {
-            gameDTOS.add(this.transformGameTOGameDTO(game));
+            gameDTOS.add(this.modelMapper.map(game, GameDTO.class));
         }
-        return gameDTOS;
+        return  new ResponseEntity<>(gameDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/comments")
@@ -80,10 +78,6 @@ public class GameController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(file);
-    }
-
-    public GameDTO transformGameTOGameDTO(Game game) {
-        return this.modelMapper.map(game, GameDTO.class);
     }
 
 }
