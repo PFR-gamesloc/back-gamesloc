@@ -2,13 +2,12 @@ package pfr.backgamesloc.games.services;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import pfr.backgamesloc.customers.DAL.CustomerRepository;
-import pfr.backgamesloc.customers.DAL.entities.Customer;
-import pfr.backgamesloc.games.DAL.GameRepository;
-import pfr.backgamesloc.games.DAL.entities.Game;
+import pfr.backgamesloc.customers.dal.CustomerRepository;
+import pfr.backgamesloc.customers.dal.entities.Customer;
+import pfr.backgamesloc.games.dal.GameRepository;
+import pfr.backgamesloc.games.dal.entities.Game;
 
 import java.util.ArrayList;
 import java.util.List;

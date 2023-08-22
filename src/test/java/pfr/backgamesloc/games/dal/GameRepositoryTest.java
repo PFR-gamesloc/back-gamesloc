@@ -1,10 +1,10 @@
-package pfr.backgamesloc.games.DAL;
+package pfr.backgamesloc.games.dal;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
-import pfr.backgamesloc.games.DAL.entities.Game;
+import pfr.backgamesloc.games.dal.entities.Game;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 

@@ -1,10 +1,10 @@
-package pfr.backgamesloc.customers.DAL;
+package pfr.backgamesloc.customers.dal;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
-import pfr.backgamesloc.customers.DAL.entities.Address;
+import pfr.backgamesloc.customers.dal.entities.Address;
 
 import java.util.Optional;
 
