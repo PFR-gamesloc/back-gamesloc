@@ -113,7 +113,7 @@ public class CustomerService implements UserDetailsService {
 
         for (Order order : orders){
             for ( Game gameOrdered: order.getGames()){
-                if (gameOrdered.getGameId() == game.getGameId()) {
+                if (gameOrdered.getGameId().equals(game.getGameId())) {
                     gameFind = true;
                     break;
                 }
