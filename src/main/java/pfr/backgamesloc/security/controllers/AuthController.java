@@ -14,9 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 import pfr.backgamesloc.customers.services.CustomerService;
 import pfr.backgamesloc.security.service.AuthService;
 import pfr.backgamesloc.security.service.TokenService;
-import pfr.backgamesloc.security.controllers.DTO.AuthRequest;
-import pfr.backgamesloc.security.controllers.DTO.RegisterRequest;
-import pfr.backgamesloc.security.controllers.DTO.TokenResponse;
+import pfr.backgamesloc.security.controllers.dto.AuthRequest;
+import pfr.backgamesloc.security.controllers.dto.RegisterRequest;
+import pfr.backgamesloc.security.controllers.dto.TokenResponse;
 
 
 @RestController

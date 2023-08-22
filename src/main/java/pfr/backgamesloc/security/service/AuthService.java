@@ -17,9 +17,9 @@ import pfr.backgamesloc.customers.dal.entities.Customer;
 import pfr.backgamesloc.customers.dal.entities.Role;
 import pfr.backgamesloc.customers.services.AddressService;
 import pfr.backgamesloc.customers.services.CityService;
-import pfr.backgamesloc.security.controllers.DTO.AuthRequest;
-import pfr.backgamesloc.security.controllers.DTO.RegisterRequest;
-import pfr.backgamesloc.security.controllers.DTO.TokenResponse;
+import pfr.backgamesloc.security.controllers.dto.AuthRequest;
+import pfr.backgamesloc.security.controllers.dto.RegisterRequest;
+import pfr.backgamesloc.security.controllers.dto.TokenResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;

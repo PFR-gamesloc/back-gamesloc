@@ -11,7 +11,7 @@ public class CustomerAddressEditDTO {
 
     private String streetName;
 
-    private String ComplementaryAddress;
+    private String complementaryAddress;
 
     private String postalCode;
 

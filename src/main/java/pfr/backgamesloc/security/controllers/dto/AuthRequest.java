@@ -1,4 +1,4 @@
-package pfr.backgamesloc.security.controllers.DTO;
+package pfr.backgamesloc.security.controllers.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
