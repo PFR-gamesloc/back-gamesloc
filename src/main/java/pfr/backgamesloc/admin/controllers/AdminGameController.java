@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import pfr.backgamesloc.admin.controllers.DTO.GameEditRequest;
-import pfr.backgamesloc.admin.controllers.DTO.ResponseMessage;
+import pfr.backgamesloc.admin.controllers.dto.GameEditRequest;
+import pfr.backgamesloc.admin.controllers.dto.ResponseMessage;
 import pfr.backgamesloc.admin.services.FileStorageService;
-import pfr.backgamesloc.games.DAL.entities.*;
-import pfr.backgamesloc.games.controllers.DTO.*;
+import pfr.backgamesloc.games.dal.entities.*;
+import pfr.backgamesloc.games.controllers.dto.*;
 import pfr.backgamesloc.games.services.GameService;
 import pfr.backgamesloc.shared.services.EditorServices;
 import pfr.backgamesloc.shared.services.LanguageServices;
@@ -49,17 +49,17 @@ public class AdminGameController {
          Game game = this.gameService.getGameById(id);
          GameEditRequest gameEditRequest = this.modelMapper.map(game, GameEditRequest.class);
 
-         List<Integer> GameEditDtoIds = new ArrayList<>();
+         List<Integer> gameEditDtoIds = new ArrayList<>();
          for (Language language : game.getLanguages()){
-             GameEditDtoIds.add(language.getLanguageId());
+             gameEditDtoIds.add(language.getLanguageId());
          }
-         gameEditRequest.setLanguagesId(GameEditDtoIds);
+         gameEditRequest.setLanguagesId(gameEditDtoIds);
 
-        GameEditDtoIds.clear();
+        gameEditDtoIds.clear();
         for (Tag tag : game.getTags()){
-            GameEditDtoIds.add(tag.getTagId());
+            gameEditDtoIds.add(tag.getTagId());
         }
-        gameEditRequest.setTagsId(GameEditDtoIds);
+        gameEditRequest.setTagsId(gameEditDtoIds);
         return gameEditRequest;
 
     }

@@ -5,10 +5,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import pfr.backgamesloc.customers.DAL.CustomerRepository;
-import pfr.backgamesloc.customers.DAL.entities.Customer;
-import pfr.backgamesloc.games.DAL.GameRepository;
-import pfr.backgamesloc.games.DAL.entities.Game;
+import pfr.backgamesloc.customers.dal.CustomerRepository;
+import pfr.backgamesloc.customers.dal.entities.Customer;
+import pfr.backgamesloc.games.dal.GameRepository;
+import pfr.backgamesloc.games.dal.entities.Game;
 import pfr.backgamesloc.shared.entities.Opinion;
 import pfr.backgamesloc.shared.repositories.OpinionRepository;
 

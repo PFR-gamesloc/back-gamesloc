@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pfr.backgamesloc.admin.services.FileStorageService;
 import pfr.backgamesloc.customers.services.CustomerService;
 
+import java.io.IOException;
+
 @Configuration
 @RequiredArgsConstructor
 public class EnvironmentConfig {
@@ -34,7 +36,7 @@ public class EnvironmentConfig {
     }
 
     @Bean
-    public void fileStorageInit() {
+    public void fileStorageInit() throws IOException {
         fileStorageService.init();
     }
 

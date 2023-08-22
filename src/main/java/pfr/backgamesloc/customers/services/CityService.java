@@ -3,8 +3,8 @@ package pfr.backgamesloc.customers.services;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pfr.backgamesloc.customers.DAL.CityRepository;
-import pfr.backgamesloc.customers.DAL.entities.City;
+import pfr.backgamesloc.customers.dal.CityRepository;
+import pfr.backgamesloc.customers.dal.entities.City;
 
 import java.util.List;
 

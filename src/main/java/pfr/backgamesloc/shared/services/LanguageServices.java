@@ -3,7 +3,7 @@ package pfr.backgamesloc.shared.services;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pfr.backgamesloc.games.DAL.entities.Language;
+import pfr.backgamesloc.games.dal.entities.Language;
 import pfr.backgamesloc.shared.repositories.LanguageRepository;
 
 import java.util.List;

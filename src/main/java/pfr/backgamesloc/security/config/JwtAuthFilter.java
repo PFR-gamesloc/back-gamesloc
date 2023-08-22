@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pfr.backgamesloc.customers.services.CustomerService;
-import pfr.backgamesloc.security.Service.TokenService;
+import pfr.backgamesloc.security.service.TokenService;
 
 import java.io.IOException;
 

@@ -2,9 +2,8 @@ package pfr.backgamesloc.customers.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pfr.backgamesloc.customers.DAL.AddressRepository;
-import pfr.backgamesloc.customers.DAL.entities.Address;
-import pfr.backgamesloc.customers.controllers.DTO.AddressDto;
+import pfr.backgamesloc.customers.dal.AddressRepository;
+import pfr.backgamesloc.customers.dal.entities.Address;
 
 @Service
 public class AddressService {

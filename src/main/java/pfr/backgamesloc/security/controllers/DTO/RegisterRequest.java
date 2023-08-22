@@ -51,7 +51,7 @@ public class RegisterRequest {
     @Pattern(regexp = "[a-zA-ZÀ-ÖØ-öø-ÿ]['a-zA-ZÀ-ÖØ-öø-ÿ0-9\\s,'’\\-]*")
     private String streetName;
 
-    private String ComplementaryAddress;
+    private String complementaryAddress;
 
     @NotNull
     @NotEmpty

@@ -3,8 +3,8 @@ package pfr.backgamesloc.shared.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import pfr.backgamesloc.customers.DAL.entities.Customer;
-import pfr.backgamesloc.games.DAL.entities.Game;
+import pfr.backgamesloc.customers.dal.entities.Customer;
+import pfr.backgamesloc.games.dal.entities.Game;
 
 import java.util.Date;
 

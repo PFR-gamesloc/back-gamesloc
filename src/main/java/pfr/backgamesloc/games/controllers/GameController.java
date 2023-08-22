@@ -9,13 +9,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pfr.backgamesloc.admin.services.FileStorageService;
-import pfr.backgamesloc.customers.controllers.DTO.CustomerOpinionDto;
-import pfr.backgamesloc.games.DAL.entities.Game;
-import pfr.backgamesloc.games.controllers.DTO.GameDTO;
-import pfr.backgamesloc.games.controllers.DTO.OpinionDTO;
+import pfr.backgamesloc.customers.controllers.dto.CustomerOpinionDto;
+import pfr.backgamesloc.games.dal.entities.Game;
+import pfr.backgamesloc.games.controllers.dto.GameDTO;
+import pfr.backgamesloc.games.controllers.dto.OpinionDTO;
 import pfr.backgamesloc.games.services.GameService;
 import pfr.backgamesloc.shared.entities.Opinion;
 
+import java.io.EOFException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +74,7 @@ public class GameController {
     }
 
     @GetMapping("/img/{fileName:.+}")
-    public ResponseEntity<UrlResource> getListFiles(@PathVariable("fileName") String fileName) {
+    public ResponseEntity<UrlResource> getListFiles(@PathVariable("fileName") String fileName) throws MalformedURLException, EOFException {
         UrlResource file = storageService.load(fileName);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")

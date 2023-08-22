@@ -3,8 +3,6 @@ package pfr.backgamesloc.security.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +12,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pfr.backgamesloc.customers.services.CustomerService;
-import pfr.backgamesloc.security.Service.AuthService;
-import pfr.backgamesloc.security.Service.TokenService;
+import pfr.backgamesloc.security.service.AuthService;
+import pfr.backgamesloc.security.service.TokenService;
 import pfr.backgamesloc.security.controllers.DTO.AuthRequest;
 import pfr.backgamesloc.security.controllers.DTO.RegisterRequest;
-import pfr.backgamesloc.security.controllers.DTO.Token;
+import pfr.backgamesloc.security.controllers.DTO.TokenResponse;
 
 
 @RestController
@@ -43,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<Token> token(@RequestBody @Valid AuthRequest request, BindingResult bindingResult) {
+    public ResponseEntity<TokenResponse> token(@RequestBody @Valid AuthRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Problèmes lors de la connexion.");
         }

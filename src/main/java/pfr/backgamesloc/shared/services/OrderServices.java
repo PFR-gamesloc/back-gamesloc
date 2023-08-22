@@ -1,7 +1,6 @@
 package pfr.backgamesloc.shared.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pfr.backgamesloc.shared.entities.Order;
 import pfr.backgamesloc.shared.repositories.OrderRepository;

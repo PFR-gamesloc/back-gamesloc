@@ -5,8 +5,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pfr.backgamesloc.customers.DAL.entities.Customer;
-import pfr.backgamesloc.customers.controllers.DTO.CustomerDto;
+import pfr.backgamesloc.customers.dal.entities.Customer;
+import pfr.backgamesloc.customers.controllers.dto.CustomerDto;
 import pfr.backgamesloc.customers.services.CustomerService;
 
 import java.util.ArrayList;
