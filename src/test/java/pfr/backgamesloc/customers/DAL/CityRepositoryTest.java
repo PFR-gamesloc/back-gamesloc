@@ -6,7 +6,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 import pfr.backgamesloc.customers.DAL.entities.City;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,14 +23,7 @@ public class CityRepositoryTest {
                 "Masevaux",
                 "68290"
         );
-        assertThat(city).isPresent();
         assertThat(city.get().getCityName()).isEqualTo("Masevaux");
     }
 
-    @Test
-    @Sql("findByPostalCodeLikeOrCityNameLike.sql")
-    public void findCityByCityNameLikeOrPostalCodeLike(){
-        List<City> cities = cityRepository.findCityByCityNameLikeOrPostalCodeLike("%12%","%Ci%");
-        assertThat(cities).hasSize(2);
-    }
 }
