@@ -10,7 +10,9 @@ import pfr.backgamesloc.customers.dal.entities.Customer;
 import pfr.backgamesloc.games.dal.GameRepository;
 import pfr.backgamesloc.games.dal.entities.Game;
 import pfr.backgamesloc.shared.entities.Opinion;
+import pfr.backgamesloc.shared.entities.Order;
 import pfr.backgamesloc.shared.repositories.OpinionRepository;
+import pfr.backgamesloc.shared.repositories.OrderRepository;
 
 import java.util.List;
 
@@ -25,8 +27,6 @@ public class GameService {
     private final CustomerRepository customerRepository;
 
     private final OpinionRepository opinionRepository;
-
-    private final ModelMapper modelMapper;
 
     public Game getGameById(Integer id) {
         return this.gameRepository.findGameByGameId(id);

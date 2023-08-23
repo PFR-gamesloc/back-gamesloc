@@ -155,7 +155,7 @@ public class CustomerController {
     }
 
     private City findOrCreateCity(CityDto cityDto) {
-        City existingCity = this.cityService.findCityByCityNameAndPostalCode(cityDto.getPostalCode(), cityDto.getCityName());
+        City existingCity = this.cityService.findCityByCityNameAndPostalCode(cityDto.getCityName(), cityDto.getPostalCode());
 
         if (existingCity != null) {
             return existingCity;
